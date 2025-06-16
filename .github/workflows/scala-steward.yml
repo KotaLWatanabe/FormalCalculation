@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Scala Steward
     steps:
+      - name: Disable GPG signing
+        run: git config --global commit.gpgsign false
       - name: Generate token
         id: generate_token
         uses: actions/create-github-app-token@v2
