@@ -18,8 +18,8 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v2
         with:
-          owner: KLogWatanabe
-          repositories: KLogWatanabe/FormalCalculation
+          owner: 'KLogWatanabe'
+          repositories: 'https://github.com/KotaLWatanabe/FormalCalculation'
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
