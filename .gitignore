@@ -1,5 +1,21 @@
-*.class
-*.log
+/target/
+/*/target/
+/project/project/
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+/.idea/
+/*.iml
+/.bloop/
+/*/.bloop/
+/.vscode/
+/.metals/
+/.cursor/
+/.bsp/
+/.claude/
+
+.DS_Store
+Thumbs.db
+
+*.log
+*.code-workspace
+*.tmp
+*.swp
