@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="function [file:/home/kota_ubuntu/Projects/FormalCalculation/]" external.linked.project.path="$MODULE_DIR$/../../../../function" external.root.project.path="$MODULE_DIR$/../../../.." external.system.id="SBT" external.system.module.type="nestedProject" type="JAVA_MODULE" version="4">
+  <component name="DisplayModuleName">
+    <option name="name" value="function" />
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_24" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../../function">
+      <excludeFolder url="file://$MODULE_DIR$/../../../../function/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="FormalCalculation.function.main" />
+    <orderEntry type="module" module-name="FormalCalculation.function.test" production-on-test="" />
+  </component>
+</module>
