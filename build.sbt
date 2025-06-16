@@ -1,6 +1,6 @@
 import Libraries.*
 
-name := "HandyBookShelf"
+name := "FormalCalculation"
 
 ThisBuild / scalaVersion := "3.7.0"
 
@@ -8,7 +8,7 @@ ThisBuild / semanticdbEnabled := true
 
 lazy val commonSettings = Seq(
   run / fork := true,
-  organization := "com.handybookshelf",
+  organization := "com.formalcalculation",
   version := "0.1.0-SNAPSHOT",
   libraryDependencies ++= Libraries.common,
   Compile / compile / wartremoverErrors ++= Seq(
@@ -35,7 +35,6 @@ lazy val commonSettings = Seq(
     "-explain-types", // 型エラー時に詳細な説明を表示
     "-Wunused:all", // 未使用コードに関する警告
     "-source:future", // 未来のバージョンの言語仕様を使用
-    "-Xfatal-warnings"
   ),
   scalacOptions --= Seq(
     "-Ykind-projector",
@@ -59,26 +58,14 @@ Test / scalafix := {}
 //    libraryDependencies += "ch.epfl.scala" %% "scalafix-core" % _root_.scalafix.sbt.BuildInfo.scalafixVersion
 //  )
 
-lazy val util = (project in file("util"))
+lazy val arithmetic = (project in file("arithmetic"))
+  .settings(
+    commonSettings
+  )
+
+lazy val function = (project in file("function"))
 //  .dependsOn(scalafix_rules % ScalafixConfig)
+  .dependsOn(arithmetic)
   .settings(
     commonSettings
   )
-
-lazy val domain = (project in file("domain"))
-  .settings(
-    commonSettings
-  )
-  .dependsOn(util)
-
-lazy val adopter = (project in file("adopter"))
-  .settings(
-    commonSettings
-  )
-  .dependsOn(util, domain)
-
-lazy val controller = (project in file("controller"))
-  .settings(
-    commonSettings
-  )
-  .dependsOn(util, domain, adopter)
