@@ -18,8 +18,10 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v2
         with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: KLogWatanabe
+          repositories: KLogWatanabe/FormalCalculation
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Scala Steward
         uses: scala-steward-org/scala-steward-action@v2
