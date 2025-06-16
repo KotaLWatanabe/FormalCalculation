@@ -1,7 +1,10 @@
+# sbt
 /target/
 /*/target/
 /project/project/
+/.bsp/
 
+# IDE
 /.idea/
 /*.iml
 /.bloop/
@@ -9,13 +12,21 @@
 /.vscode/
 /.metals/
 /.cursor/
-/.bsp/
 /.claude/
 
+# OS
 .DS_Store
 Thumbs.db
 
+# Scala
+*.class
 *.log
+
+# Temp files
 *.code-workspace
 *.tmp
 *.swp
+*~
+
+# Scala Steward
+.scala-steward.conf.backup
