@@ -26,7 +26,6 @@ jobs:
       - name: Scala Steward
         uses: scala-steward-org/scala-steward-action@v2
         with:
-          repos-file: 'repos.md'
           github-token: ${{ steps.generate_token.outputs.token }}
           author-email: 'me@formalcalculation.com'
           author-name: 'Scala Steward'
