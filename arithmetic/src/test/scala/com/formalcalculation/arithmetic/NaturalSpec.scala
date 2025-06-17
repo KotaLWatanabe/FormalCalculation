@@ -4,16 +4,19 @@ package com.formalcalculation.arithmetic
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import com.formalcalculation.algebra.Monoid
+import org.scalacheck.Gen
+import cats.data.NonEmptyList
 
 class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyChecks {
   
   "Natural.fromInt" should "create correct natural numbers" in {
     Natural.fromInt(0) shouldBe Natural.Zero
-    Natural.fromInt(1) shouldBe Natural.Positive(List(true))
-    Natural.fromInt(2) shouldBe Natural.Positive(List(false, true))
-    Natural.fromInt(3) shouldBe Natural.Positive(List(true, true))
-    Natural.fromInt(4) shouldBe Natural.Positive(List(false, false, true))
-    Natural.fromInt(5) shouldBe Natural.Positive(List(true, false, true))
+    Natural.fromInt(1) shouldBe Natural.Positive(NonEmptyList.of(true))
+    Natural.fromInt(2) shouldBe Natural.Positive(NonEmptyList.of(false, true))
+    Natural.fromInt(3) shouldBe Natural.Positive(NonEmptyList.of(true, true))
+    Natural.fromInt(4) shouldBe Natural.Positive(NonEmptyList.of(false, false, true))
+    Natural.fromInt(5) shouldBe Natural.Positive(NonEmptyList.of(true, false, true))
   }
   
   it should "reject negative integers" in {
@@ -154,5 +157,52 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
         Natural.equal(Natural.multiply(natA, Natural.Zero), Natural.Zero) shouldBe true
       }
     }
+  }
+  
+  "Natural Addition Monoid" should "satisfy monoid laws" in {
+    forAll(Gen.choose(0, 100), Gen.choose(0, 100), Gen.choose(0, 100)) { (a: Int, b: Int, c: Int) =>
+      val natA = Natural.fromInt(a)
+      val natB = Natural.fromInt(b) 
+      val natC = Natural.fromInt(c)
+      
+      // Left identity - using Natural instances directly as Monoids
+      natA.combine(natA.empty, natA) shouldBe natA
+      
+      // Right identity
+      natA.combine(natA, natA.empty) shouldBe natA
+      
+      // Associativity
+      natA.combine(natA.combine(natA, natB), natC) shouldBe
+        natA.combine(natA, natA.combine(natB, natC))
+    }
+  }
+  
+  "Natural Multiplication Monoid" should "satisfy monoid laws" in {
+    import Natural.naturalMultiplicationMonoid
+    
+    forAll(Gen.choose(0, 20), Gen.choose(0, 20), Gen.choose(0, 20)) { (a: Int, b: Int, c: Int) =>
+      val natA = Natural.fromInt(a)
+      val natB = Natural.fromInt(b)
+      val natC = Natural.fromInt(c)
+      
+      // Left identity
+      naturalMultiplicationMonoid.combine(naturalMultiplicationMonoid.empty, natA) shouldBe natA
+      
+      // Right identity  
+      naturalMultiplicationMonoid.combine(natA, naturalMultiplicationMonoid.empty) shouldBe natA
+      
+      // Associativity
+      naturalMultiplicationMonoid.combine(naturalMultiplicationMonoid.combine(natA, natB), natC) shouldBe
+        naturalMultiplicationMonoid.combine(natA, naturalMultiplicationMonoid.combine(natB, natC))
+    }
+  }
+  
+  "Natural combineAll" should "work correctly" in {
+    import com.formalcalculation.algebra.Monoid.*
+    
+    val numbers = List(Natural.fromInt(1), Natural.fromInt(2), Natural.fromInt(3), Natural.fromInt(4))
+    numbers.combineAll shouldBe Natural.fromInt(10)
+    
+    List.empty[Natural].combineAll shouldBe Natural.Zero
   }
 }

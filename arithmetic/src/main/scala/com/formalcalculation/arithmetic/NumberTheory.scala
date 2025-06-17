@@ -61,8 +61,8 @@ object NumberTheory {
   /** 素数判定（試し割り法） */
   def isPrime(n: Natural): Boolean = n match {
     case Natural.Zero => false
-    case Natural.Positive(List(true)) => false // 1は素数ではない
-    case Natural.Positive(List(false, true)) => true // 2は素数
+    case Natural.Positive(bits) if bits.toList == List(true) => false // 1は素数ではない
+    case Natural.Positive(bits) if bits.toList == List(false, true) => true // 2は素数
     case _ =>
       // 2で割り切れるかチェック
       if (isEven(n)) false
@@ -112,7 +112,7 @@ object NumberTheory {
   /** 平方根の近似値（ニュートン法の簡易版） */
   private def approximateSqrt(n: Natural): Natural = n match {
     case Natural.Zero => Natural.Zero
-    case Natural.Positive(List(true)) => Natural.fromInt(1)
+    case Natural.Positive(bits) if bits.toList == List(true) => Natural.fromInt(1)
     case _ =>
       // 初期値として n/2 を使用
       val two = Natural.fromInt(2)
@@ -145,7 +145,7 @@ object NumberTheory {
   /** 階乗 */
   def factorial(n: Natural): Natural = n match {
     case Natural.Zero => Natural.fromInt(1)
-    case Natural.Positive(List(true)) => Natural.fromInt(1) // 1! = 1
+    case Natural.Positive(bits) if bits.toList == List(true) => Natural.fromInt(1) // 1! = 1
     case _ =>
       def loop(current: Natural, acc: Natural): Natural = current match {
         case Natural.Zero => acc
@@ -160,7 +160,7 @@ object NumberTheory {
   /** フィボナッチ数列のn番目 */
   def fibonacci(n: Natural): Natural = n match {
     case Natural.Zero => Natural.Zero
-    case Natural.Positive(List(true)) => Natural.fromInt(1) // F(1) = 1
+    case Natural.Positive(bits) if bits.toList == List(true) => Natural.fromInt(1) // F(1) = 1
     case _ =>
       def loop(i: Natural, prev: Natural, current: Natural): Natural = 
         if (Natural.equal(i, n)) current
