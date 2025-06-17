@@ -49,6 +49,26 @@ object IntegerOps {
     Natural.fromInt(n)
   }
   
+  /** ゼロでない整数の演算子 */
+  implicit class NonZeroIntegerOps(val nz: NonZeroInteger) extends AnyVal {
+    def +(other: NonZeroInteger): Integer = NonZeroInteger.add(nz, other)
+    def -(other: NonZeroInteger): Integer = NonZeroInteger.subtract(nz, other)
+    def *(other: NonZeroInteger): NonZeroInteger = NonZeroInteger.multiply(nz, other)
+    def /(other: NonZeroInteger): Integer = NonZeroInteger.divide(nz, other)
+    def %(other: NonZeroInteger): Integer = NonZeroInteger.remainder(nz, other)
+    def /%(other: NonZeroInteger): (Integer, Integer) = NonZeroInteger.divideWithRemainder(nz, other)
+    def **(exponent: Natural): Integer = NonZeroInteger.power(nz, exponent)
+    def unary_- : NonZeroInteger = NonZeroInteger.negate(nz)
+    def compare(other: NonZeroInteger): Int = NonZeroInteger.compare(nz, other)
+    def ==(other: NonZeroInteger): Boolean = NonZeroInteger.equal(nz, other)
+    def !=(other: NonZeroInteger): Boolean = !NonZeroInteger.equal(nz, other)
+    def <(other: NonZeroInteger): Boolean = NonZeroInteger.compare(nz, other) < 0
+    def <=(other: NonZeroInteger): Boolean = NonZeroInteger.compare(nz, other) <= 0
+    def >(other: NonZeroInteger): Boolean = NonZeroInteger.compare(nz, other) > 0
+    def >=(other: NonZeroInteger): Boolean = NonZeroInteger.compare(nz, other) >= 0
+    def abs: Natural.Positive = NonZeroInteger.abs(nz)
+  }
+  
   /** 便利な定数 */
   object Constants {
     val Zero: Integer = Integer.Zero
@@ -59,6 +79,10 @@ object IntegerOps {
     val NaturalZero: Natural = Natural.Zero
     val NaturalOne: Natural = Natural.fromInt(1)
     val NaturalTwo: Natural = Natural.fromInt(2)
+    
+    val NonZeroOne: NonZeroInteger = NonZeroInteger.fromIntUnsafe(1)
+    val NonZeroMinusOne: NonZeroInteger = NonZeroInteger.fromIntUnsafe(-1)
+    val NonZeroTwo: NonZeroInteger = NonZeroInteger.fromIntUnsafe(2)
   }
   
   /** 文字列表現 */
@@ -68,6 +92,10 @@ object IntegerOps {
   
   implicit class IntegerShow(val i: Integer) extends AnyVal {
     def show: String = integerToString(i)
+  }
+  
+  implicit class NonZeroIntegerShow(val nz: NonZeroInteger) extends AnyVal {
+    def show: String = integerToString(nz.toInteger)
   }
   
   /** 自然数を文字列に変換 */
