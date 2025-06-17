@@ -34,5 +34,5 @@ jobs:
           github-token: ${{ steps.generate_token.outputs.token }}
           author-email: 'me@formalcalculation.com'
           author-name: 'Scala Steward'
-          sign-commits: true
+          sign-commits: false
           cache-ttl: '24hours'
