@@ -12,7 +12,7 @@ object Libraries {
   val ulidVersion            = "2025.1.14"
   val ironVersion            = "3.0.1"
   val xmlVersion             = "2.4.0"
-  val tapirVersion           = "1.11.33"
+  val tapirVersion           = "1.11.34"
 
   // Libraries
   lazy val cats       = "org.typelevel" %% "cats-core"   % catsVersion
