@@ -23,7 +23,7 @@ object Sign {
 object Integer {
   
   /** ゼロ */
-  final case object Zero extends Integer {
+  case object Zero extends Integer {
     val isZero: Boolean = true
     val isPositive: Boolean = false
     val isNegative: Boolean = false

@@ -13,7 +13,7 @@ sealed trait Natural {
 object Natural {
   
   /** ゼロを表す自然数 */
-  final case object Zero extends Natural {
+  case object Zero extends Natural {
     val toBits: List[Boolean] = Nil
     val isZero: Boolean = true
     val isOne: Boolean = false
@@ -132,7 +132,7 @@ object Natural {
   }
   
   /** 減算（結果が負になる場合は未定義） */
-  private def subtractUnsafe(a: Natural, b: Natural): Natural = (a, b) match {
+  def subtractUnsafe(a: Natural, b: Natural): Natural = (a, b) match {
     case (x, Zero) => x
     case (Zero, _) => Zero // 実際には呼ばれない
     case (Positive(aBits), Positive(bBits)) =>

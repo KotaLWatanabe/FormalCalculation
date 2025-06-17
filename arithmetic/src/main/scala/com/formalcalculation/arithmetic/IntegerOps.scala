@@ -122,8 +122,8 @@ object IntegerOps {
   /** 自然数を10で割った商を計算（簡易実装） */
   private def divideByTen(n: Natural): Natural = {
     val ten = Natural.fromInt(10)
-    var current = Natural.Zero
-    var quotient = Natural.Zero
+    var current: Natural = Natural.Zero
+    var quotient: Natural = Natural.Zero
     val one = Natural.fromInt(1)
     
     // 10 * quotient + remainder = n となるquotientを見つける

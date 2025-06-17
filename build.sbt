@@ -58,7 +58,13 @@ Test / scalafix := {}
 //    libraryDependencies += "ch.epfl.scala" %% "scalafix-core" % _root_.scalafix.sbt.BuildInfo.scalafixVersion
 //  )
 
+lazy val abstractAlgebra = (project in file("abstract-algebra"))
+  .settings(
+    commonSettings
+  )
+
 lazy val arithmetic = (project in file("arithmetic"))
+  .dependsOn(abstractAlgebra)
   .settings(
     commonSettings
   )
