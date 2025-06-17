@@ -1,21 +1,21 @@
 import sbt.*
 
 object Libraries {
-  val catsVersion = "2.13.0"
-  val catsEffectVersion = "3.6.1"
-  val scalaTestVersion = "3.2.19"
-  val http4sVersion = "0.23.30"
-  val circeVersion = "0.14.13"
-  val munitVersion = "1.1.1"
-  val logbackVersion = "1.5.18"
+  val catsVersion            = "2.13.0"
+  val catsEffectVersion      = "3.6.1"
+  val scalaTestVersion       = "3.2.19"
+  val http4sVersion          = "0.23.30"
+  val circeVersion           = "0.14.13"
+  val munitVersion           = "1.1.1"
+  val logbackVersion         = "1.5.18"
   val munitCatsEffectVersion = "1.0.7"
-  val ulidVersion = "2025.1.11"
-  val ironVersion = "3.0.1"
-  val xmlVersion = "2.4.0"
-  val tapirVersion = "1.11.33"
+  val ulidVersion            = "2025.1.14"
+  val ironVersion            = "3.0.1"
+  val xmlVersion             = "2.4.0"
+  val tapirVersion           = "1.11.33"
 
   // Libraries
-  lazy val cats = "org.typelevel" %% "cats-core" % catsVersion
+  lazy val cats       = "org.typelevel" %% "cats-core"   % catsVersion
   lazy val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
   lazy val scalaTest =
     "org.scalatest" %% "scalatest" % scalaTestVersion % Test
@@ -25,8 +25,8 @@ object Libraries {
   lazy val http4s: Seq[ModuleID] = Seq(
     "org.http4s" %% "http4s-ember-server" % http4sVersion,
     "org.http4s" %% "http4s-ember-client" % http4sVersion,
-    "org.http4s" %% "http4s-circe" % http4sVersion,
-    "org.http4s" %% "http4s-dsl" % http4sVersion
+    "org.http4s" %% "http4s-circe"        % http4sVersion,
+    "org.http4s" %% "http4s-dsl"          % http4sVersion
   )
   lazy val munit = "org.scalameta" %% "munit" % munitVersion % Test
   lazy val munitCatsEffect =
@@ -40,15 +40,15 @@ object Libraries {
     "org.wvlet.airframe" %% "airframe-ulid" % ulidVersion
   lazy val circe = "io.circe" %% "circe-generic" % circeVersion
 
-  lazy val iron = "io.github.iltotore" %% "iron" % ironVersion
-  lazy val ironCats = "io.github.iltotore" %% "iron-cats" % ironVersion
-  lazy val xml = "org.scala-lang.modules" %% "scala-xml" % xmlVersion
+  lazy val iron     = "io.github.iltotore"     %% "iron"      % ironVersion
+  lazy val ironCats = "io.github.iltotore"     %% "iron-cats" % ironVersion
+  lazy val xml      = "org.scala-lang.modules" %% "scala-xml" % xmlVersion
   lazy val tapir: Seq[ModuleID] = Seq(
-    "com.softwaremill.sttp.tapir" %% "tapir-core" % tapirVersion,
-    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % tapirVersion,
-    "com.softwaremill.sttp.tapir" %% "tapir-http4s-client" % tapirVersion,
-    "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % tapirVersion,
-    "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs" % tapirVersion,
+    "com.softwaremill.sttp.tapir" %% "tapir-core"              % tapirVersion,
+    "com.softwaremill.sttp.tapir" %% "tapir-http4s-server"     % tapirVersion,
+    "com.softwaremill.sttp.tapir" %% "tapir-http4s-client"     % tapirVersion,
+    "com.softwaremill.sttp.tapir" %% "tapir-json-circe"        % tapirVersion,
+    "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"      % tapirVersion,
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % tapirVersion
   )
   lazy val sttp: Seq[ModuleID] = Seq(
