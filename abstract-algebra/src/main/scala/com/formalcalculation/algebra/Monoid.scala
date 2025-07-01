@@ -28,7 +28,11 @@ object Monoid {
       def empty: A = emptyValue
       def combine(x: A, y: A): A = combineFunction(x, y)
     }
-  
+
+  extension [A](x: A)(using M: Monoid[A]) {
+    /** Combine two values */
+    def combine(y: A): A = M.combine(x, y)
+  }
   /** Syntax extensions for Monoid operations */
   extension [A](xs: List[A])(using M: Monoid[A])
     def combineAll: A = M.combineAll(xs)

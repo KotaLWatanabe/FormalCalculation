@@ -18,6 +18,7 @@ object IntegerOps {
     def <=(other: Natural): Boolean = Natural.compare(n, other) <= 0
     def >(other: Natural): Boolean = Natural.compare(n, other) > 0
     def >=(other: Natural): Boolean = Natural.compare(n, other) >= 0
+    def toInt: Int = naturalToInt(n)
   }
   
   /** 整数の演算子 */
@@ -38,6 +39,8 @@ object IntegerOps {
     def >(other: Integer): Boolean = Integer.compare(i, other) > 0
     def >=(other: Integer): Boolean = Integer.compare(i, other) >= 0
     def abs: Natural = Integer.abs(i)
+    def toInt: Int = integerToInt(i)
+    def divide(other: Integer): Option[(Integer, Integer)] = Integer.divideWithRemainder(i, other)
   }
   
   /** Int から Integer への暗黙的変換 */
@@ -181,5 +184,21 @@ object IntegerOps {
         case None => count
       }
     loop(n, 0)
+  }
+  
+  /** 自然数をIntに変換 */
+  private def naturalToInt(n: Natural): Int = n match {
+    case Natural.Zero => 0
+    case Natural.Positive(bits) =>
+      bits.toList.zipWithIndex.foldLeft(0) { case (acc, (bit, index)) =>
+        if (bit) acc + (1 << index) else acc
+      }
+  }
+  
+  /** 整数をIntに変換 */
+  private def integerToInt(i: Integer): Int = i match {
+    case Integer.Zero => 0
+    case Integer.Positive(value) => naturalToInt(value)
+    case Integer.Negative(value) => -naturalToInt(value)
   }
 }
