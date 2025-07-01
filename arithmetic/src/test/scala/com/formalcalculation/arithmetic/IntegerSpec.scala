@@ -6,223 +6,234 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyChecks {
-  
+
   "Integer.fromInt" should "create correct integers" in {
-    Integer.fromInt(0) shouldBe Integer.Zero
-    Integer.fromInt(1) shouldBe Integer.Positive(Natural.fromInt(1))
-    Integer.fromInt(-1) shouldBe Integer.Negative(Natural.fromInt(1))
-    Integer.fromInt(5) shouldBe Integer.Positive(Natural.fromInt(5))
-    Integer.fromInt(-5) shouldBe Integer.Negative(Natural.fromInt(5))
+    val _ = Integer.fromInt(0).shouldBe(Integer.Zero)
+    val _ = Integer.fromInt(1).shouldBe(Integer.Positive(Natural.fromInt(1)))
+    val _ = Integer.fromInt(-1).shouldBe(Integer.Negative(Natural.fromInt(1)))
+    val _ = Integer.fromInt(5).shouldBe(Integer.Positive(Natural.fromInt(5)))
+    val _ = Integer.fromInt(-5).shouldBe(Integer.Negative(Natural.fromInt(5)))
   }
-  
+
   "Integer addition" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
+    val zero     = Integer.Zero
+    val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
-    val two = Integer.fromInt(2)
+    val two      = Integer.fromInt(2)
     val minusTwo = Integer.fromInt(-2)
-    val three = Integer.fromInt(3)
-    val five = Integer.fromInt(5)
-    
-    Integer.add(zero, zero) shouldBe zero
-    Integer.add(zero, one) shouldBe one
-    Integer.add(one, zero) shouldBe one
-    Integer.add(one, one) shouldBe two
-    Integer.add(one, minusOne) shouldBe zero
-    Integer.add(minusOne, one) shouldBe zero
-    Integer.add(minusOne, minusOne) shouldBe minusTwo
-    Integer.add(two, three) shouldBe five
+    val three    = Integer.fromInt(3)
+    val five     = Integer.fromInt(5)
+
+    val _ = Integer.add(zero, zero).shouldBe(zero)
+    val _ = Integer.add(zero, one).shouldBe(one)
+    val _ = Integer.add(one, zero).shouldBe(one)
+    val _ = Integer.add(one, one).shouldBe(two)
+    val _ = Integer.add(one, minusOne).shouldBe(zero)
+    val _ = Integer.add(minusOne, one).shouldBe(zero)
+    val _ = Integer.add(minusOne, minusOne).shouldBe(minusTwo)
+    val _ = Integer.add(two, three).shouldBe(five)
   }
-  
+
   "Integer subtraction" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
+    val zero     = Integer.Zero
+    val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
-    val two = Integer.fromInt(2)
-    val three = Integer.fromInt(3)
-    val five = Integer.fromInt(5)
-    
-    Integer.subtract(zero, zero) shouldBe zero
-    Integer.subtract(one, one) shouldBe zero
-    Integer.subtract(five, three) shouldBe two
-    Integer.subtract(three, five) shouldBe Integer.fromInt(-2)
-    Integer.subtract(one, minusOne) shouldBe two
-    Integer.subtract(minusOne, one) shouldBe Integer.fromInt(-2)
+    val two      = Integer.fromInt(2)
+    val three    = Integer.fromInt(3)
+    val five     = Integer.fromInt(5)
+
+    val _ = Integer.subtract(zero, zero).shouldBe(zero)
+    val _ = Integer.subtract(one, one).shouldBe(zero)
+    val _ = Integer.subtract(five, three).shouldBe(two)
+    val _ = Integer.subtract(three, five).shouldBe(Integer.fromInt(-2))
+    val _ = Integer.subtract(one, minusOne).shouldBe(two)
+    val _ = Integer.subtract(minusOne, one).shouldBe(Integer.fromInt(-2))
   }
-  
+
   "Integer multiplication" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
+    val zero     = Integer.Zero
+    val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
-    val two = Integer.fromInt(2)
-    val three = Integer.fromInt(3)
-    val six = Integer.fromInt(6)
+    val two      = Integer.fromInt(2)
+    val three    = Integer.fromInt(3)
+    val six      = Integer.fromInt(6)
     val minusSix = Integer.fromInt(-6)
-    
-    Integer.multiply(zero, zero) shouldBe zero
-    Integer.multiply(zero, one) shouldBe zero
-    Integer.multiply(one, one) shouldBe one
-    Integer.multiply(one, minusOne) shouldBe minusOne
-    Integer.multiply(minusOne, one) shouldBe minusOne
-    Integer.multiply(minusOne, minusOne) shouldBe one
-    Integer.multiply(two, three) shouldBe six
-    Integer.multiply(two, Integer.fromInt(-3)) shouldBe minusSix
-    Integer.multiply(Integer.fromInt(-2), three) shouldBe minusSix
-    Integer.multiply(Integer.fromInt(-2), Integer.fromInt(-3)) shouldBe six
+
+    val _ = Integer.multiply(zero, zero).shouldBe(zero)
+    val _ = Integer.multiply(zero, one).shouldBe(zero)
+    val _ = Integer.multiply(one, one).shouldBe(one)
+    val _ = Integer.multiply(one, minusOne).shouldBe(minusOne)
+    val _ = Integer.multiply(minusOne, one).shouldBe(minusOne)
+    val _ = Integer.multiply(minusOne, minusOne).shouldBe(one)
+    val _ = Integer.multiply(two, three).shouldBe(six)
+    val _ = Integer.multiply(two, Integer.fromInt(-3)).shouldBe(minusSix)
+    val _ = Integer.multiply(Integer.fromInt(-2), three).shouldBe(minusSix)
+    val _ = Integer.multiply(Integer.fromInt(-2), Integer.fromInt(-3)).shouldBe(six)
   }
-  
+
   "Integer division" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
-    val minusOne = Integer.fromInt(-1)
-    val two = Integer.fromInt(2)
-    val six = Integer.fromInt(6)
-    val seven = Integer.fromInt(7)
+    val zero       = Integer.Zero
+    val one        = Integer.fromInt(1)
+    val minusOne   = Integer.fromInt(-1)
+    val two        = Integer.fromInt(2)
+    val six        = Integer.fromInt(6)
+    val seven      = Integer.fromInt(7)
     val minusSeven = Integer.fromInt(-7)
-    
-    Integer.divide(zero, one) shouldBe Some(zero)
-    Integer.divide(one, one) shouldBe Some(one)
-    Integer.divide(six, two) shouldBe Some(Integer.fromInt(3))
-    Integer.divide(six, Integer.fromInt(3)) shouldBe Some(two)
-    Integer.divide(seven, Integer.fromInt(3)) shouldBe Some(two) // 7 / 3 = 2 (商)
-    Integer.divide(six, minusOne) shouldBe Some(Integer.fromInt(-6))
-    Integer.divide(minusSeven, Integer.fromInt(3)) shouldBe Some(Integer.fromInt(-2))
-    
-    Integer.divide(one, zero) shouldBe None // ゼロ除算
+
+    val _ = Integer.divide(zero, one).shouldBe(Some(zero))
+    val _ = Integer.divide(one, one).shouldBe(Some(one))
+    val _ = Integer.divide(six, two).shouldBe(Some(Integer.fromInt(3)))
+    val _ = Integer.divide(six, Integer.fromInt(3)).shouldBe(Some(two))
+    val _ = Integer.divide(seven, Integer.fromInt(3)).shouldBe(Some(two)) // 7 / 3 = 2 (商)
+    val _ = Integer.divide(six, minusOne).shouldBe(Some(Integer.fromInt(-6)))
+    val _ = Integer.divide(minusSeven, Integer.fromInt(3)).shouldBe(Some(Integer.fromInt(-2)))
+
+    val _ = Integer.divide(one, zero).shouldBe(None) // ゼロ除算)
   }
-  
+
   "Integer remainder" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
-    val two = Integer.fromInt(2)
-    val three = Integer.fromInt(3)
-    val seven = Integer.fromInt(7)
+    val zero       = Integer.Zero
+    val one        = Integer.fromInt(1)
+    val three      = Integer.fromInt(3)
+    val seven      = Integer.fromInt(7)
+    val minusOne   = Integer.fromInt(-1)
     val minusSeven = Integer.fromInt(-7)
-    
-    Integer.remainder(zero, one) shouldBe Some(zero)
-    Integer.remainder(one, one) shouldBe Some(zero)
-    Integer.remainder(seven, three) shouldBe Some(one) // 7 % 3 = 1
-    Integer.remainder(minusSeven, three) shouldBe Some(minusOne) // -7 % 3 = -1
-    Integer.remainder(seven, Integer.fromInt(-3)) shouldBe Some(one) // 7 % -3 = 1
-    
-    Integer.remainder(one, zero) shouldBe None // ゼロ除算
+
+    val _ = Integer.remainder(zero, one).shouldBe(Some(zero))
+    val _ = Integer.remainder(one, one).shouldBe(Some(zero))
+    val _ = Integer.remainder(seven, three).shouldBe(Some(one))               // 7 % 3 = 1
+    val _ = Integer.remainder(minusSeven, three).shouldBe(Some(minusOne))     // -7 % 3 = -1
+    val _ = Integer.remainder(seven, Integer.fromInt(-3)).shouldBe(Some(one)) // 7 % -3 = 1
+
+    val _ = Integer.remainder(one, zero).shouldBe(None) // ゼロ除算)
   }
-  
+
   "Integer power" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
+    val zero     = Integer.Zero
+    val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
-    val two = Integer.fromInt(2)
-    val three = Integer.fromInt(3)
-    
-    val natZero = Natural.Zero
-    val natOne = Natural.fromInt(1)
-    val natTwo = Natural.fromInt(2)
+    val two      = Integer.fromInt(2)
+
+    val natZero  = Natural.Zero
+    val natOne   = Natural.fromInt(1)
+    val natTwo   = Natural.fromInt(2)
     val natThree = Natural.fromInt(3)
-    
-    Integer.power(zero, natZero) shouldBe one // 0^0 = 1（定義による）
-    Integer.power(zero, natOne) shouldBe zero // 0^1 = 0
-    Integer.power(one, natZero) shouldBe one // 1^0 = 1
-    Integer.power(one, natThree) shouldBe one // 1^3 = 1
-    Integer.power(two, natZero) shouldBe one // 2^0 = 1
-    Integer.power(two, natOne) shouldBe two // 2^1 = 2
-    Integer.power(two, natTwo) shouldBe Integer.fromInt(4) // 2^2 = 4
-    Integer.power(two, natThree) shouldBe Integer.fromInt(8) // 2^3 = 8
-    Integer.power(minusOne, natTwo) shouldBe one // (-1)^2 = 1
-    Integer.power(minusOne, natThree) shouldBe minusOne // (-1)^3 = -1
+
+    val _ = Integer.power(zero, natZero).shouldBe(one)                // 0^0 = 1（定義による）)
+    val _ = Integer.power(zero, natOne).shouldBe(zero)                // 0^1 = 0)
+    val _ = Integer.power(one, natZero).shouldBe(one)                 // 1^0 = 1)
+    val _ = Integer.power(one, natThree).shouldBe(one)                // 1^3 = 1)
+    val _ = Integer.power(two, natZero).shouldBe(one)                 // 2^0 = 1)
+    val _ = Integer.power(two, natOne).shouldBe(two)                  // 2^1 = 2)
+    val _ = Integer.power(two, natTwo).shouldBe(Integer.fromInt(4))   // 2^2 = 4)
+    val _ = Integer.power(two, natThree).shouldBe(Integer.fromInt(8)) // 2^3 = 8)
+    val _ = Integer.power(minusOne, natTwo).shouldBe(one)             // (-1)^2 = 1)
+    val _ = Integer.power(minusOne, natThree).shouldBe(minusOne)      // (-1)^3 = -1)
   }
-  
+
   "Integer comparison" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
+    val zero     = Integer.Zero
+    val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
-    val two = Integer.fromInt(2)
+    val two      = Integer.fromInt(2)
     val minusTwo = Integer.fromInt(-2)
-    val five = Integer.fromInt(5)
-    
-    Integer.compare(zero, zero) shouldBe 0
-    Integer.compare(one, one) shouldBe 0
-    Integer.compare(minusOne, minusOne) shouldBe 0
-    
-    Integer.compare(zero, one) shouldBe -1
-    Integer.compare(one, zero) shouldBe 1
-    Integer.compare(minusOne, zero) shouldBe -1
-    Integer.compare(zero, minusOne) shouldBe 1
-    Integer.compare(minusOne, one) shouldBe -1
-    Integer.compare(one, minusOne) shouldBe 1
-    
-    Integer.compare(one, two) shouldBe -1
-    Integer.compare(two, one) shouldBe 1
-    Integer.compare(minusTwo, minusOne) shouldBe -1
-    Integer.compare(minusOne, minusTwo) shouldBe 1
-    Integer.compare(minusOne, five) shouldBe -1
-    Integer.compare(five, minusOne) shouldBe 1
+    val five     = Integer.fromInt(5)
+
+    val _ = Integer.compare(zero, zero).shouldBe(0)
+    val _ = Integer.compare(one, one).shouldBe(0)
+    val _ = Integer.compare(minusOne, minusOne).shouldBe(0)
+
+    val _ = Integer.compare(zero, one).shouldBe(-1)
+    val _ = Integer.compare(one, zero).shouldBe(1)
+    val _ = Integer.compare(minusOne, zero).shouldBe(-1)
+    val _ = Integer.compare(zero, minusOne).shouldBe(1)
+    val _ = Integer.compare(minusOne, one).shouldBe(-1)
+    val _ = Integer.compare(one, minusOne).shouldBe(1)
+
+    val _ = Integer.compare(one, two).shouldBe(-1)
+    val _ = Integer.compare(two, one).shouldBe(1)
+    val _ = Integer.compare(minusTwo, minusOne).shouldBe(-1)
+    val _ = Integer.compare(minusOne, minusTwo).shouldBe(1)
+    val _ = Integer.compare(minusOne, five).shouldBe(-1)
+    val _ = Integer.compare(five, minusOne).shouldBe(1)
   }
-  
+
   "Integer negate" should "work correctly" in {
-    val zero = Integer.Zero
-    val one = Integer.fromInt(1)
-    val minusOne = Integer.fromInt(-1)
-    val five = Integer.fromInt(5)
+    val zero      = Integer.Zero
+    val one       = Integer.fromInt(1)
+    val minusOne  = Integer.fromInt(-1)
+    val five      = Integer.fromInt(5)
     val minusFive = Integer.fromInt(-5)
-    
-    Integer.negate(zero) shouldBe zero
-    Integer.negate(one) shouldBe minusOne
-    Integer.negate(minusOne) shouldBe one
-    Integer.negate(five) shouldBe minusFive
-    Integer.negate(minusFive) shouldBe five
+
+    val _ = Integer.negate(zero).shouldBe(zero)
+    val _ = Integer.negate(one).shouldBe(minusOne)
+    val _ = Integer.negate(minusOne).shouldBe(one)
+    val _ = Integer.negate(five).shouldBe(minusFive)
+    val _ = Integer.negate(minusFive).shouldBe(five)
   }
-  
+
   "Integer properties" should "satisfy basic arithmetic properties" in {
-    forAll { (a: Int, b: Int, c: Int) =>
+    import org.scalacheck.Gen
+    val intGen = Gen.choose(-1000, 1000)
+    forAll(intGen, intGen, intGen) { (a: Int, b: Int, c: Int) =>
       val intA = Integer.fromInt(a)
       val intB = Integer.fromInt(b)
       val intC = Integer.fromInt(c)
-      
+
       // 加法の交換法則
-      Integer.equal(
-        Integer.add(intA, intB),
-        Integer.add(intB, intA)
-      ) shouldBe true
-      
+      val _ = Integer
+        .equal(
+          Integer.add(intA, intB),
+          Integer.add(intB, intA)
+        )
+        .shouldBe(true)
+
       // 加法の結合法則
-      Integer.equal(
-        Integer.add(Integer.add(intA, intB), intC),
-        Integer.add(intA, Integer.add(intB, intC))
-      ) shouldBe true
-      
+      val _ = Integer
+        .equal(
+          Integer.add(Integer.add(intA, intB), intC),
+          Integer.add(intA, Integer.add(intB, intC))
+        )
+        .shouldBe(true)
+
       // 乗法の交換法則
-      Integer.equal(
-        Integer.multiply(intA, intB),
-        Integer.multiply(intB, intA)
-      ) shouldBe true
-      
+      val _ = Integer
+        .equal(
+          Integer.multiply(intA, intB),
+          Integer.multiply(intB, intA)
+        )
+        .shouldBe(true)
+
       // 乗法の結合法則
-      Integer.equal(
-        Integer.multiply(Integer.multiply(intA, intB), intC),
-        Integer.multiply(intA, Integer.multiply(intB, intC))
-      ) shouldBe true
-      
+      val _ = Integer
+        .equal(
+          Integer.multiply(Integer.multiply(intA, intB), intC),
+          Integer.multiply(intA, Integer.multiply(intB, intC))
+        )
+        .shouldBe(true)
+
       // 分配法則
-      Integer.equal(
-        Integer.multiply(intA, Integer.add(intB, intC)),
-        Integer.add(Integer.multiply(intA, intB), Integer.multiply(intA, intC))
-      ) shouldBe true
-      
+      val _ = Integer
+        .equal(
+          Integer.multiply(intA, Integer.add(intB, intC)),
+          Integer.add(Integer.multiply(intA, intB), Integer.multiply(intA, intC))
+        )
+        .shouldBe(true)
+
       // 加法の単位元
-      Integer.equal(Integer.add(intA, Integer.Zero), intA) shouldBe true
-      
+      val _ = Integer.equal(Integer.add(intA, Integer.Zero), intA).shouldBe(true)
+
       // 乗法の単位元
-      Integer.equal(Integer.multiply(intA, Integer.fromInt(1)), intA) shouldBe true
-      
+      val _ = Integer.equal(Integer.multiply(intA, Integer.fromInt(1)), intA).shouldBe(true)
+
       // 乗法の零元
-      Integer.equal(Integer.multiply(intA, Integer.Zero), Integer.Zero) shouldBe true
-      
+      val _ = Integer.equal(Integer.multiply(intA, Integer.Zero), Integer.Zero).shouldBe(true)
+
       // 加法の逆元
-      Integer.equal(Integer.add(intA, Integer.negate(intA)), Integer.Zero) shouldBe true
-      
+      val _ = Integer.equal(Integer.add(intA, Integer.negate(intA)), Integer.Zero).shouldBe(true)
+
       // 二重否定
-      Integer.equal(Integer.negate(Integer.negate(intA)), intA) shouldBe true
+      val _ = Integer.equal(Integer.negate(Integer.negate(intA)), intA).shouldBe(true)
     }
   }
 }

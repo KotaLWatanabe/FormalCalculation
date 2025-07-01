@@ -5,210 +5,210 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class NumberTheorySpec extends AnyFlatSpec with Matchers {
-  
+
   "GCD" should "work correctly for natural numbers" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
-    val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val six = Natural.fromInt(6)
-    val eight = Natural.fromInt(8)
-    val twelve = Natural.fromInt(12)
-    val fifteen = Natural.fromInt(15)
+    val zero     = Natural.Zero
+    val one      = Natural.fromInt(1)
+    val two      = Natural.fromInt(2)
+    val three    = Natural.fromInt(3)
+    val four     = Natural.fromInt(4)
+    val six      = Natural.fromInt(6)
+    val eight    = Natural.fromInt(8)
+    val twelve   = Natural.fromInt(12)
+    val fifteen  = Natural.fromInt(15)
     val eighteen = Natural.fromInt(18)
-    
-    NumberTheory.gcd(zero, zero) shouldBe zero
-    NumberTheory.gcd(zero, one) shouldBe one
-    NumberTheory.gcd(one, zero) shouldBe one
-    NumberTheory.gcd(one, one) shouldBe one
-    NumberTheory.gcd(two, three) shouldBe one
-    NumberTheory.gcd(four, six) shouldBe two
-    NumberTheory.gcd(eight, twelve) shouldBe four
-    NumberTheory.gcd(fifteen, eighteen) shouldBe three
+
+    val _ = NumberTheory.gcd(zero, zero).shouldBe(zero)
+    val _ = NumberTheory.gcd(zero, one).shouldBe(one)
+    val _ = NumberTheory.gcd(one, zero).shouldBe(one)
+    val _ = NumberTheory.gcd(one, one).shouldBe(one)
+    val _ = NumberTheory.gcd(two, three).shouldBe(one)
+    val _ = NumberTheory.gcd(four, six).shouldBe(two)
+    val _ = NumberTheory.gcd(eight, twelve).shouldBe(four)
+    val _ = NumberTheory.gcd(fifteen, eighteen).shouldBe(three)
   }
-  
+
   "LCM" should "work correctly for natural numbers" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
-    val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val six = Natural.fromInt(6)
-    val twelve = Natural.fromInt(12)
+    val zero    = Natural.Zero
+    val one     = Natural.fromInt(1)
+    val two     = Natural.fromInt(2)
+    val three   = Natural.fromInt(3)
+    val four    = Natural.fromInt(4)
+    val six     = Natural.fromInt(6)
+    val twelve  = Natural.fromInt(12)
     val fifteen = Natural.fromInt(15)
-    val thirty = Natural.fromInt(30)
-    
-    NumberTheory.lcm(zero, zero) shouldBe zero
-    NumberTheory.lcm(zero, one) shouldBe zero
-    NumberTheory.lcm(one, zero) shouldBe zero
-    NumberTheory.lcm(one, one) shouldBe one
-    NumberTheory.lcm(two, three) shouldBe six
-    NumberTheory.lcm(four, six) shouldBe twelve
-    NumberTheory.lcm(six, fifteen) shouldBe thirty
+    val thirty  = Natural.fromInt(30)
+
+    val _ = NumberTheory.lcm(zero, zero).shouldBe(zero)
+    val _ = NumberTheory.lcm(zero, one).shouldBe(zero)
+    val _ = NumberTheory.lcm(one, zero).shouldBe(zero)
+    val _ = NumberTheory.lcm(one, one).shouldBe(one)
+    val _ = NumberTheory.lcm(two, three).shouldBe(six)
+    val _ = NumberTheory.lcm(four, six).shouldBe(twelve)
+    val _ = NumberTheory.lcm(six, fifteen).shouldBe(thirty)
   }
-  
+
   "Even/Odd detection" should "work correctly" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
+    val zero  = Natural.Zero
+    val one   = Natural.fromInt(1)
+    val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val five = Natural.fromInt(5)
-    
-    NumberTheory.isEven(zero) shouldBe true
-    NumberTheory.isEven(one) shouldBe false
-    NumberTheory.isEven(two) shouldBe true
-    NumberTheory.isEven(three) shouldBe false
-    NumberTheory.isEven(four) shouldBe true
-    NumberTheory.isEven(five) shouldBe false
-    
-    NumberTheory.isOdd(zero) shouldBe false
-    NumberTheory.isOdd(one) shouldBe true
-    NumberTheory.isOdd(two) shouldBe false
-    NumberTheory.isOdd(three) shouldBe true
-    NumberTheory.isOdd(four) shouldBe false
-    NumberTheory.isOdd(five) shouldBe true
+    val four  = Natural.fromInt(4)
+    val five  = Natural.fromInt(5)
+
+    val _ = NumberTheory.isEven(zero).shouldBe(true)
+    val _ = NumberTheory.isEven(one).shouldBe(false)
+    val _ = NumberTheory.isEven(two).shouldBe(true)
+    val _ = NumberTheory.isEven(three).shouldBe(false)
+    val _ = NumberTheory.isEven(four).shouldBe(true)
+    val _ = NumberTheory.isEven(five).shouldBe(false)
+
+    val _ = NumberTheory.isOdd(zero).shouldBe(false)
+    val _ = NumberTheory.isOdd(one).shouldBe(true)
+    val _ = NumberTheory.isOdd(two).shouldBe(false)
+    val _ = NumberTheory.isOdd(three).shouldBe(true)
+    val _ = NumberTheory.isOdd(four).shouldBe(false)
+    val _ = NumberTheory.isOdd(five).shouldBe(true)
   }
-  
+
   "Divisibility" should "work correctly" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
-    val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val six = Natural.fromInt(6)
-    val eight = Natural.fromInt(8)
-    val nine = Natural.fromInt(9)
+    val zero   = Natural.Zero
+    val one    = Natural.fromInt(1)
+    val two    = Natural.fromInt(2)
+    val three  = Natural.fromInt(3)
+    val four   = Natural.fromInt(4)
+    val six    = Natural.fromInt(6)
+    val eight  = Natural.fromInt(8)
+    val nine   = Natural.fromInt(9)
     val twelve = Natural.fromInt(12)
-    
-    NumberTheory.isDivisibleBy(zero, one) shouldBe true
-    NumberTheory.isDivisibleBy(zero, two) shouldBe true
-    NumberTheory.isDivisibleBy(one, zero) shouldBe false // ゼロ除算
-    
-    NumberTheory.isDivisibleBy(four, two) shouldBe true
-    NumberTheory.isDivisibleBy(six, three) shouldBe true
-    NumberTheory.isDivisibleBy(eight, four) shouldBe true
-    NumberTheory.isDivisibleBy(twelve, three) shouldBe true
-    NumberTheory.isDivisibleBy(twelve, four) shouldBe true
-    
-    NumberTheory.isDivisibleBy(three, two) shouldBe false
-    NumberTheory.isDivisibleBy(four, three) shouldBe false
-    NumberTheory.isDivisibleBy(nine, four) shouldBe false
+
+    val _ = NumberTheory.isDivisibleBy(zero, one).shouldBe(true)
+    val _ = NumberTheory.isDivisibleBy(zero, two).shouldBe(true)
+    val _ = NumberTheory.isDivisibleBy(one, zero).shouldBe(false) // ゼロ除算
+
+    val _ = NumberTheory.isDivisibleBy(four, two).shouldBe(true)
+    val _ = NumberTheory.isDivisibleBy(six, three).shouldBe(true)
+    val _ = NumberTheory.isDivisibleBy(eight, four).shouldBe(true)
+    val _ = NumberTheory.isDivisibleBy(twelve, three).shouldBe(true)
+    val _ = NumberTheory.isDivisibleBy(twelve, four).shouldBe(true)
+
+    val _ = NumberTheory.isDivisibleBy(three, two).shouldBe(false)
+    val _ = NumberTheory.isDivisibleBy(four, three).shouldBe(false)
+    val _ = NumberTheory.isDivisibleBy(nine, four).shouldBe(false)
   }
-  
+
   "Prime detection" should "work correctly for small numbers" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
-    val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val five = Natural.fromInt(5)
-    val six = Natural.fromInt(6)
-    val seven = Natural.fromInt(7)
-    val eight = Natural.fromInt(8)
-    val nine = Natural.fromInt(9)
-    val ten = Natural.fromInt(10)
-    val eleven = Natural.fromInt(11)
-    val twelve = Natural.fromInt(12)
+    val zero     = Natural.Zero
+    val one      = Natural.fromInt(1)
+    val two      = Natural.fromInt(2)
+    val three    = Natural.fromInt(3)
+    val four     = Natural.fromInt(4)
+    val five     = Natural.fromInt(5)
+    val six      = Natural.fromInt(6)
+    val seven    = Natural.fromInt(7)
+    val eight    = Natural.fromInt(8)
+    val nine     = Natural.fromInt(9)
+    val ten      = Natural.fromInt(10)
+    val eleven   = Natural.fromInt(11)
+    val twelve   = Natural.fromInt(12)
     val thirteen = Natural.fromInt(13)
-    
-    NumberTheory.isPrime(zero) shouldBe false
-    NumberTheory.isPrime(one) shouldBe false
-    NumberTheory.isPrime(two) shouldBe true
-    NumberTheory.isPrime(three) shouldBe true
-    NumberTheory.isPrime(four) shouldBe false
-    NumberTheory.isPrime(five) shouldBe true
-    NumberTheory.isPrime(six) shouldBe false
-    NumberTheory.isPrime(seven) shouldBe true
-    NumberTheory.isPrime(eight) shouldBe false
-    NumberTheory.isPrime(nine) shouldBe false
-    NumberTheory.isPrime(ten) shouldBe false
-    NumberTheory.isPrime(eleven) shouldBe true
-    NumberTheory.isPrime(twelve) shouldBe false
-    NumberTheory.isPrime(thirteen) shouldBe true
+
+    val _ = NumberTheory.isPrime(zero).shouldBe(false)
+    val _ = NumberTheory.isPrime(one).shouldBe(false)
+    val _ = NumberTheory.isPrime(two).shouldBe(true)
+    val _ = NumberTheory.isPrime(three).shouldBe(true)
+    val _ = NumberTheory.isPrime(four).shouldBe(false)
+    val _ = NumberTheory.isPrime(five).shouldBe(true)
+    val _ = NumberTheory.isPrime(six).shouldBe(false)
+    val _ = NumberTheory.isPrime(seven).shouldBe(true)
+    val _ = NumberTheory.isPrime(eight).shouldBe(false)
+    val _ = NumberTheory.isPrime(nine).shouldBe(false)
+    val _ = NumberTheory.isPrime(ten).shouldBe(false)
+    val _ = NumberTheory.isPrime(eleven).shouldBe(true)
+    val _ = NumberTheory.isPrime(twelve).shouldBe(false)
+    val _ = NumberTheory.isPrime(thirteen).shouldBe(true)
   }
-  
+
   "Factorial" should "work correctly" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
+    val zero  = Natural.Zero
+    val one   = Natural.fromInt(1)
+    val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val five = Natural.fromInt(5)
-    
-    NumberTheory.factorial(zero) shouldBe one // 0! = 1
-    NumberTheory.factorial(one) shouldBe one // 1! = 1
-    NumberTheory.factorial(two) shouldBe two // 2! = 2
-    NumberTheory.factorial(three) shouldBe Natural.fromInt(6) // 3! = 6
-    NumberTheory.factorial(four) shouldBe Natural.fromInt(24) // 4! = 24
-    NumberTheory.factorial(five) shouldBe Natural.fromInt(120) // 5! = 120
+    val four  = Natural.fromInt(4)
+    val five  = Natural.fromInt(5)
+
+    val _ = NumberTheory.factorial(zero).shouldBe(one)                  // 0! = 1
+    val _ = NumberTheory.factorial(one).shouldBe(one)                   // 1! = 1
+    val _ = NumberTheory.factorial(two).shouldBe(two)                   // 2! = 2
+    val _ = NumberTheory.factorial(three).shouldBe(Natural.fromInt(6))  // 3! = 6
+    val _ = NumberTheory.factorial(four).shouldBe(Natural.fromInt(24))  // 4! = 24
+    val _ = NumberTheory.factorial(five).shouldBe(Natural.fromInt(120)) // 5! = 120
   }
-  
+
   "Fibonacci" should "work correctly" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
+    val zero  = Natural.Zero
+    val one   = Natural.fromInt(1)
+    val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val five = Natural.fromInt(5)
-    val six = Natural.fromInt(6)
+    val four  = Natural.fromInt(4)
+    val five  = Natural.fromInt(5)
+    val six   = Natural.fromInt(6)
     val seven = Natural.fromInt(7)
     val eight = Natural.fromInt(8)
-    
-    NumberTheory.fibonacci(zero) shouldBe zero // F(0) = 0
-    NumberTheory.fibonacci(one) shouldBe one // F(1) = 1
-    NumberTheory.fibonacci(two) shouldBe one // F(2) = 1
-    NumberTheory.fibonacci(three) shouldBe two // F(3) = 2
-    NumberTheory.fibonacci(four) shouldBe three // F(4) = 3
-    NumberTheory.fibonacci(five) shouldBe five // F(5) = 5
-    NumberTheory.fibonacci(six) shouldBe eight // F(6) = 8
-    NumberTheory.fibonacci(seven) shouldBe Natural.fromInt(13) // F(7) = 13
-    NumberTheory.fibonacci(eight) shouldBe Natural.fromInt(21) // F(8) = 21
+
+    val _ = NumberTheory.fibonacci(zero).shouldBe(zero)                 // F(0) = 0
+    val _ = NumberTheory.fibonacci(one).shouldBe(one)                   // F(1) = 1
+    val _ = NumberTheory.fibonacci(two).shouldBe(one)                   // F(2) = 1
+    val _ = NumberTheory.fibonacci(three).shouldBe(two)                 // F(3) = 2
+    val _ = NumberTheory.fibonacci(four).shouldBe(three)                // F(4) = 3
+    val _ = NumberTheory.fibonacci(five).shouldBe(five)                 // F(5) = 5
+    val _ = NumberTheory.fibonacci(six).shouldBe(eight)                 // F(6) = 8
+    val _ = NumberTheory.fibonacci(seven).shouldBe(Natural.fromInt(13)) // F(7) = 13
+    val _ = NumberTheory.fibonacci(eight).shouldBe(Natural.fromInt(21)) // F(8) = 21
   }
-  
+
   "Binomial coefficient" should "work correctly" in {
-    val zero = Natural.Zero
-    val one = Natural.fromInt(1)
-    val two = Natural.fromInt(2)
+    val zero  = Natural.Zero
+    val one   = Natural.fromInt(1)
+    val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
-    val four = Natural.fromInt(4)
-    val five = Natural.fromInt(5)
-    
+    val four  = Natural.fromInt(4)
+    val five  = Natural.fromInt(5)
+
     // C(n, 0) = 1
-    NumberTheory.binomialCoefficient(zero, zero) shouldBe Some(one)
-    NumberTheory.binomialCoefficient(one, zero) shouldBe Some(one)
-    NumberTheory.binomialCoefficient(five, zero) shouldBe Some(one)
-    
+    val _ = NumberTheory.binomialCoefficient(zero, zero).shouldBe(Some(one))
+    val _ = NumberTheory.binomialCoefficient(one, zero).shouldBe(Some(one))
+    val _ = NumberTheory.binomialCoefficient(five, zero).shouldBe(Some(one))
+
     // C(n, n) = 1
-    NumberTheory.binomialCoefficient(one, one) shouldBe Some(one)
-    NumberTheory.binomialCoefficient(three, three) shouldBe Some(one)
-    NumberTheory.binomialCoefficient(five, five) shouldBe Some(one)
-    
+    val _ = NumberTheory.binomialCoefficient(one, one).shouldBe(Some(one))
+    val _ = NumberTheory.binomialCoefficient(three, three).shouldBe(Some(one))
+    val _ = NumberTheory.binomialCoefficient(five, five).shouldBe(Some(one))
+
     // C(n, 1) = n
-    NumberTheory.binomialCoefficient(one, one) shouldBe Some(one)
-    NumberTheory.binomialCoefficient(three, one) shouldBe Some(three)
-    NumberTheory.binomialCoefficient(five, one) shouldBe Some(five)
-    
+    val _ = NumberTheory.binomialCoefficient(one, one).shouldBe(Some(one))
+    val _ = NumberTheory.binomialCoefficient(three, one).shouldBe(Some(three))
+    val _ = NumberTheory.binomialCoefficient(five, one).shouldBe(Some(five))
+
     // その他の組み合わせ
-    NumberTheory.binomialCoefficient(four, two) shouldBe Some(Natural.fromInt(6)) // C(4,2) = 6
-    NumberTheory.binomialCoefficient(five, two) shouldBe Some(Natural.fromInt(10)) // C(5,2) = 10
-    NumberTheory.binomialCoefficient(five, three) shouldBe Some(Natural.fromInt(10)) // C(5,3) = 10
-    
+    val _ = NumberTheory.binomialCoefficient(four, two).shouldBe(Some(Natural.fromInt(6)))    // C(4,2) = 6
+    val _ = NumberTheory.binomialCoefficient(five, two).shouldBe(Some(Natural.fromInt(10)))   // C(5,2) = 10
+    val _ = NumberTheory.binomialCoefficient(five, three).shouldBe(Some(Natural.fromInt(10))) // C(5,3) = 10
+
     // k > n の場合は 0
-    NumberTheory.binomialCoefficient(three, four) shouldBe Some(zero)
-    NumberTheory.binomialCoefficient(two, five) shouldBe Some(zero)
+    val _ = NumberTheory.binomialCoefficient(three, four).shouldBe(Some(zero))
+    val _ = NumberTheory.binomialCoefficient(two, five).shouldBe(Some(zero))
   }
-  
+
   "GCD and LCM relationship" should "satisfy fundamental properties" in {
-    val a = Natural.fromInt(12)
-    val b = Natural.fromInt(18)
-    val gcdValue = NumberTheory.gcd(a, b)
-    val lcmValue = NumberTheory.lcm(a, b)
-    val product = Natural.multiply(a, b)
+    val a             = Natural.fromInt(12)
+    val b             = Natural.fromInt(18)
+    val gcdValue      = NumberTheory.gcd(a, b)
+    val lcmValue      = NumberTheory.lcm(a, b)
+    val product       = Natural.multiply(a, b)
     val gcdLcmProduct = Natural.multiply(gcdValue, lcmValue)
-    
+
     // gcd(a,b) * lcm(a,b) = a * b
-    Natural.equal(gcdLcmProduct, product) shouldBe true
+    val _ = Natural.equal(gcdLcmProduct, product).shouldBe(true)
   }
 }

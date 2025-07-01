@@ -4,154 +4,163 @@ package com.formalcalculation.arithmetic
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
-import cats.data.NonEmptyList
 
 class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyChecks {
-  
+
   "NonZeroInteger.fromInt" should "create correct non-zero integers" in {
-    NonZeroInteger.fromInt(1) shouldBe Some(NonZeroInteger.Positive(Natural.fromInt(1).asInstanceOf[Natural.Positive]))
-    NonZeroInteger.fromInt(-1) shouldBe Some(NonZeroInteger.Negative(Natural.fromInt(1).asInstanceOf[Natural.Positive]))
-    NonZeroInteger.fromInt(5) shouldBe Some(NonZeroInteger.Positive(Natural.fromInt(5).asInstanceOf[Natural.Positive]))
-    NonZeroInteger.fromInt(-5) shouldBe Some(NonZeroInteger.Negative(Natural.fromInt(5).asInstanceOf[Natural.Positive]))
+    val _ = NonZeroInteger.fromInt(1).shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(1).asInstanceOf[Natural.Positive])))
+    val _ = NonZeroInteger
+      .fromInt(-1)
+      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(1).asInstanceOf[Natural.Positive])))
+    val _ = NonZeroInteger.fromInt(5).shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+    val _ = NonZeroInteger
+      .fromInt(-5)
+      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
   }
-  
+
   it should "return None for zero" in {
-    NonZeroInteger.fromInt(0) shouldBe None
+    val _ = NonZeroInteger.fromInt(0).shouldBe(None)
   }
-  
+
   "NonZeroInteger.fromIntUnsafe" should "create correct non-zero integers" in {
-    NonZeroInteger.fromIntUnsafe(1) shouldBe NonZeroInteger.Positive(Natural.fromInt(1).asInstanceOf[Natural.Positive])
-    NonZeroInteger.fromIntUnsafe(-1) shouldBe NonZeroInteger.Negative(Natural.fromInt(1).asInstanceOf[Natural.Positive])
+    val _ = NonZeroInteger.fromIntUnsafe(1).shouldBe(NonZeroInteger.Positive(Natural.fromInt(1).asInstanceOf[Natural.Positive]))
+    val _ = NonZeroInteger
+      .fromIntUnsafe(-1)
+      .shouldBe(NonZeroInteger.Negative(Natural.fromInt(1).asInstanceOf[Natural.Positive]))
   }
-  
+
   it should "throw exception for zero" in {
     an[IllegalArgumentException] should be thrownBy NonZeroInteger.fromIntUnsafe(0)
   }
-  
+
   "NonZeroInteger.fromInteger" should "convert from Integer correctly" in {
-    val pos = Integer.fromInt(5)
-    val neg = Integer.fromInt(-5)
+    val pos  = Integer.fromInt(5)
+    val neg  = Integer.fromInt(-5)
     val zero = Integer.Zero
-    
-    NonZeroInteger.fromInteger(pos) shouldBe Some(NonZeroInteger.Positive(Natural.fromInt(5).asInstanceOf[Natural.Positive]))
-    NonZeroInteger.fromInteger(neg) shouldBe Some(NonZeroInteger.Negative(Natural.fromInt(5).asInstanceOf[Natural.Positive]))
-    NonZeroInteger.fromInteger(zero) shouldBe None
+
+    val _ = NonZeroInteger
+      .fromInteger(pos)
+      .shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+    val _ = NonZeroInteger
+      .fromInteger(neg)
+      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+    val _ = NonZeroInteger.fromInteger(zero).shouldBe(None)
   }
-  
+
   "NonZeroInteger addition" should "work correctly" in {
     val pos1 = NonZeroInteger.fromIntUnsafe(3)
     val pos2 = NonZeroInteger.fromIntUnsafe(5)
     val neg1 = NonZeroInteger.fromIntUnsafe(-3)
     val neg2 = NonZeroInteger.fromIntUnsafe(-5)
-    
-    NonZeroInteger.add(pos1, pos2) shouldBe Integer.fromInt(8)
-    NonZeroInteger.add(neg1, neg2) shouldBe Integer.fromInt(-8)
-    NonZeroInteger.add(pos1, neg1) shouldBe Integer.Zero
-    NonZeroInteger.add(pos2, neg1) shouldBe Integer.fromInt(2)
-    NonZeroInteger.add(pos1, neg2) shouldBe Integer.fromInt(-2)
+
+    val _ = NonZeroInteger.add(pos1, pos2).shouldBe(Integer.fromInt(8))
+    val _ = NonZeroInteger.add(neg1, neg2).shouldBe(Integer.fromInt(-8))
+    val _ = NonZeroInteger.add(pos1, neg1).shouldBe(Integer.Zero)
+    val _ = NonZeroInteger.add(pos2, neg1).shouldBe(Integer.fromInt(2))
+    val _ = NonZeroInteger.add(pos1, neg2).shouldBe(Integer.fromInt(-2))
   }
-  
+
   "NonZeroInteger subtraction" should "work correctly" in {
     val pos1 = NonZeroInteger.fromIntUnsafe(5)
     val pos2 = NonZeroInteger.fromIntUnsafe(3)
     val neg1 = NonZeroInteger.fromIntUnsafe(-3)
-    
-    NonZeroInteger.subtract(pos1, pos2) shouldBe Integer.fromInt(2)
-    NonZeroInteger.subtract(pos2, pos1) shouldBe Integer.fromInt(-2)
-    NonZeroInteger.subtract(pos1, neg1) shouldBe Integer.fromInt(8)
+
+    val _ = NonZeroInteger.subtract(pos1, pos2).shouldBe(Integer.fromInt(2))
+    val _ = NonZeroInteger.subtract(pos2, pos1).shouldBe(Integer.fromInt(-2))
+    val _ = NonZeroInteger.subtract(pos1, neg1).shouldBe(Integer.fromInt(8))
   }
-  
+
   "NonZeroInteger multiplication" should "work correctly" in {
     val pos1 = NonZeroInteger.fromIntUnsafe(3)
     val pos2 = NonZeroInteger.fromIntUnsafe(4)
     val neg1 = NonZeroInteger.fromIntUnsafe(-3)
     val neg2 = NonZeroInteger.fromIntUnsafe(-4)
-    
-    NonZeroInteger.multiply(pos1, pos2) shouldBe NonZeroInteger.fromIntUnsafe(12)
-    NonZeroInteger.multiply(neg1, neg2) shouldBe NonZeroInteger.fromIntUnsafe(12)
-    NonZeroInteger.multiply(pos1, neg1) shouldBe NonZeroInteger.fromIntUnsafe(-9)
-    NonZeroInteger.multiply(neg1, pos2) shouldBe NonZeroInteger.fromIntUnsafe(-12)
+
+    val _ = NonZeroInteger.multiply(pos1, pos2).shouldBe(NonZeroInteger.fromIntUnsafe(12))
+    val _ = NonZeroInteger.multiply(neg1, neg2).shouldBe(NonZeroInteger.fromIntUnsafe(12))
+    val _ = NonZeroInteger.multiply(pos1, neg1).shouldBe(NonZeroInteger.fromIntUnsafe(-9))
+    val _ = NonZeroInteger.multiply(neg1, pos2).shouldBe(NonZeroInteger.fromIntUnsafe(-12))
   }
-  
+
   "NonZeroInteger division" should "work correctly" in {
-    val dividend = NonZeroInteger.fromIntUnsafe(12)
-    val divisor = NonZeroInteger.fromIntUnsafe(3)
+    val dividend    = NonZeroInteger.fromIntUnsafe(12)
+    val divisor     = NonZeroInteger.fromIntUnsafe(3)
     val negDividend = NonZeroInteger.fromIntUnsafe(-12)
-    val negDivisor = NonZeroInteger.fromIntUnsafe(-3)
-    
-    NonZeroInteger.divide(dividend, divisor) shouldBe Integer.fromInt(4)
-    NonZeroInteger.divide(negDividend, divisor) shouldBe Integer.fromInt(-4)
-    NonZeroInteger.divide(dividend, negDivisor) shouldBe Integer.fromInt(-4)
-    NonZeroInteger.divide(negDividend, negDivisor) shouldBe Integer.fromInt(4)
+    val negDivisor  = NonZeroInteger.fromIntUnsafe(-3)
+
+    val _ = NonZeroInteger.divide(dividend, divisor).shouldBe(Integer.fromInt(4))
+    val _ = NonZeroInteger.divide(negDividend, divisor).shouldBe(Integer.fromInt(-4))
+    val _ = NonZeroInteger.divide(dividend, negDivisor).shouldBe(Integer.fromInt(-4))
+    val _ = NonZeroInteger.divide(negDividend, negDivisor).shouldBe(Integer.fromInt(4))
   }
-  
+
   "NonZeroInteger comparison" should "work correctly" in {
     val pos1 = NonZeroInteger.fromIntUnsafe(3)
     val pos2 = NonZeroInteger.fromIntUnsafe(5)
     val neg1 = NonZeroInteger.fromIntUnsafe(-3)
     val neg2 = NonZeroInteger.fromIntUnsafe(-5)
-    
-    NonZeroInteger.compare(pos1, pos1) shouldBe 0
-    NonZeroInteger.compare(pos1, pos2) shouldBe -1
-    NonZeroInteger.compare(pos2, pos1) shouldBe 1
-    NonZeroInteger.compare(pos1, neg1) shouldBe 1
-    NonZeroInteger.compare(neg1, pos1) shouldBe -1
-    NonZeroInteger.compare(neg1, neg2) shouldBe 1
-    NonZeroInteger.compare(neg2, neg1) shouldBe -1
+
+    val _ = NonZeroInteger.compare(pos1, pos1).shouldBe(0)
+    val _ = NonZeroInteger.compare(pos1, pos2).shouldBe(-1)
+    val _ = NonZeroInteger.compare(pos2, pos1).shouldBe(1)
+    val _ = NonZeroInteger.compare(pos1, neg1).shouldBe(1)
+    val _ = NonZeroInteger.compare(neg1, pos1).shouldBe(-1)
+    val _ = NonZeroInteger.compare(neg1, neg2).shouldBe(1)
+    val _ = NonZeroInteger.compare(neg2, neg1).shouldBe(-1)
   }
-  
+
   "NonZeroInteger equality" should "work correctly" in {
     val pos1 = NonZeroInteger.fromIntUnsafe(3)
     val pos2 = NonZeroInteger.fromIntUnsafe(3)
     val pos3 = NonZeroInteger.fromIntUnsafe(5)
     val neg1 = NonZeroInteger.fromIntUnsafe(-3)
-    
-    NonZeroInteger.equal(pos1, pos2) shouldBe true
-    NonZeroInteger.equal(pos1, pos3) shouldBe false
-    NonZeroInteger.equal(pos1, neg1) shouldBe false
+
+    val _ = NonZeroInteger.equal(pos1, pos2).shouldBe(true)
+    val _ = NonZeroInteger.equal(pos1, pos3).shouldBe(false)
+    val _ = NonZeroInteger.equal(pos1, neg1).shouldBe(false)
   }
-  
+
   "NonZeroInteger negation" should "work correctly" in {
     val pos = NonZeroInteger.fromIntUnsafe(5)
     val neg = NonZeroInteger.fromIntUnsafe(-5)
-    
-    NonZeroInteger.negate(pos) shouldBe NonZeroInteger.fromIntUnsafe(-5)
-    NonZeroInteger.negate(neg) shouldBe NonZeroInteger.fromIntUnsafe(5)
+
+    val _ = NonZeroInteger.negate(pos).shouldBe(NonZeroInteger.fromIntUnsafe(-5))
+    val _ = NonZeroInteger.negate(neg).shouldBe(NonZeroInteger.fromIntUnsafe(5))
   }
-  
+
   "NonZeroInteger power" should "work correctly" in {
-    val base = NonZeroInteger.fromIntUnsafe(2)
+    val base    = NonZeroInteger.fromIntUnsafe(2)
     val negBase = NonZeroInteger.fromIntUnsafe(-2)
-    
-    NonZeroInteger.power(base, Natural.Zero) shouldBe Integer.fromInt(1)
-    NonZeroInteger.power(base, Natural.fromInt(1)) shouldBe Integer.fromInt(2)
-    NonZeroInteger.power(base, Natural.fromInt(3)) shouldBe Integer.fromInt(8)
-    NonZeroInteger.power(negBase, Natural.fromInt(2)) shouldBe Integer.fromInt(4)
-    NonZeroInteger.power(negBase, Natural.fromInt(3)) shouldBe Integer.fromInt(-8)
+
+    val _ = NonZeroInteger.power(base, Natural.Zero).shouldBe(Integer.fromInt(1))
+    val _ = NonZeroInteger.power(base, Natural.fromInt(1)).shouldBe(Integer.fromInt(2))
+    val _ = NonZeroInteger.power(base, Natural.fromInt(3)).shouldBe(Integer.fromInt(8))
+    val _ = NonZeroInteger.power(negBase, Natural.fromInt(2)).shouldBe(Integer.fromInt(4))
+    val _ = NonZeroInteger.power(negBase, Natural.fromInt(3)).shouldBe(Integer.fromInt(-8))
   }
-  
+
   "NonZeroInteger toInteger" should "convert correctly" in {
     val pos = NonZeroInteger.fromIntUnsafe(5)
     val neg = NonZeroInteger.fromIntUnsafe(-5)
-    
-    pos.toInteger shouldBe Integer.fromInt(5)
-    neg.toInteger shouldBe Integer.fromInt(-5)
+
+    val _ = pos.toInteger.shouldBe(Integer.fromInt(5))
+    val _ = neg.toInteger.shouldBe(Integer.fromInt(-5))
   }
-  
+
   "NonZeroInteger properties" should "maintain non-zero invariant" in {
-    forAll { (a: Int, b: Int) =>
-      whenever(a != 0 && b != 0) {
-        val nzA = NonZeroInteger.fromIntUnsafe(a)
-        val nzB = NonZeroInteger.fromIntUnsafe(b)
-        
-        // 乗算は常にゼロでない
-        val product = NonZeroInteger.multiply(nzA, nzB)
-        product.toInteger should not be Integer.Zero
-        
-        // 絶対値は常に正
-        nzA.abs.isZero shouldBe false
-        nzB.abs.isZero shouldBe false
-      }
+    import org.scalacheck.Gen
+    val nonZeroIntGen = Gen.choose(-1000, 1000).suchThat(_ != 0)
+    forAll(nonZeroIntGen, nonZeroIntGen) { (a: Int, b: Int) =>
+      val nzA = NonZeroInteger.fromIntUnsafe(a)
+      val nzB = NonZeroInteger.fromIntUnsafe(b)
+
+      // 乗算は常にゼロでない
+      val product = NonZeroInteger.multiply(nzA, nzB)
+      product.toInteger should not be Integer.Zero
+
+      // 絶対値は常に正
+      val _ = nzA.abs.isZero.shouldBe(false)
+      val _ = nzB.abs.isZero.shouldBe(false)
     }
   }
 }
