@@ -10,12 +10,12 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyChecks {
 
   "Natural.fromInt" should "create correct natural numbers" in {
-    val _ = Natural.fromInt(0).shouldBe(Natural.Zero)
-    val _ = Natural.fromInt(1).shouldBe(Natural.Positive(NonEmptyList.of(true)))
-    val _ = Natural.fromInt(2).shouldBe(Natural.Positive(NonEmptyList.of(false, true)))
-    val _ = Natural.fromInt(3).shouldBe(Natural.Positive(NonEmptyList.of(true, true)))
-    val _ = Natural.fromInt(4).shouldBe(Natural.Positive(NonEmptyList.of(false, false, true)))
-    val _ = Natural.fromInt(5).shouldBe(Natural.Positive(NonEmptyList.of(true, false, true)))
+    val _ = Natural.fromInt(0).shouldBe(Natural.zero)
+    val _ = Natural.fromInt(1).shouldBe(Natural.positiveFromBits(NonEmptyList.of(true)))
+    val _ = Natural.fromInt(2).shouldBe(Natural.positiveFromBits(NonEmptyList.of(false, true)))
+    val _ = Natural.fromInt(3).shouldBe(Natural.positiveFromBits(NonEmptyList.of(true, true)))
+    val _ = Natural.fromInt(4).shouldBe(Natural.positiveFromBits(NonEmptyList.of(false, false, true)))
+    val _ = Natural.fromInt(5).shouldBe(Natural.positiveFromBits(NonEmptyList.of(true, false, true)))
   }
 
   it should "reject negative integers" in {
@@ -23,7 +23,7 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Natural addition" should "work correctly" in {
-    val zero  = Natural.Zero
+    val zero  = Natural.zero
     val one   = Natural.fromInt(1)
     val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
@@ -38,7 +38,7 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Natural multiplication" should "work correctly" in {
-    val zero   = Natural.Zero
+    val zero   = Natural.zero
     val one    = Natural.fromInt(1)
     val two    = Natural.fromInt(2)
     val three  = Natural.fromInt(3)
@@ -55,7 +55,7 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Natural comparison" should "work correctly" in {
-    val zero = Natural.Zero
+    val zero = Natural.zero
     val one  = Natural.fromInt(1)
     val two  = Natural.fromInt(2)
     val five = Natural.fromInt(5)
@@ -72,7 +72,7 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Natural subtraction" should "work correctly when result is non-negative" in {
-    val zero = Natural.Zero
+    val zero = Natural.zero
     val one  = Natural.fromInt(1)
     val two  = Natural.fromInt(2)
     val five = Natural.fromInt(5)
@@ -86,7 +86,7 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   it should "return None when result would be negative" in {
-    val zero = Natural.Zero
+    val zero = Natural.zero
     val one  = Natural.fromInt(1)
     val two  = Natural.fromInt(2)
     val five = Natural.fromInt(5)
@@ -97,8 +97,8 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Natural equality" should "work correctly" in {
-    val zero1 = Natural.Zero
-    val zero2 = Natural.Zero
+    val zero1 = Natural.zero
+    val zero2 = Natural.zero
     val one1  = Natural.fromInt(1)
     val one2  = Natural.fromInt(1)
     val two   = Natural.fromInt(2)
@@ -158,13 +158,13 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
         .shouldBe(true)
 
       // 加法の単位元
-      val _ = Natural.equal(Natural.add(natA, Natural.Zero), natA).shouldBe(true)
+      val _ = Natural.equal(Natural.add(natA, Natural.zero), natA).shouldBe(true)
 
       // 乗法の単位元
       val _ = Natural.equal(Natural.multiply(natA, Natural.fromInt(1)), natA).shouldBe(true)
 
       // 乗法の零元
-      val _ = Natural.equal(Natural.multiply(natA, Natural.Zero), Natural.Zero).shouldBe(true)
+      val _ = Natural.equal(Natural.multiply(natA, Natural.zero), Natural.zero).shouldBe(true)
     }
   }
 
@@ -215,6 +215,6 @@ class NaturalSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
     val numbers: List[Natural] = List(Natural.fromInt(1), Natural.fromInt(2), Natural.fromInt(3), Natural.fromInt(4))
     val _ = naturalAdditionMonoid.combineAll(numbers).shouldBe(Natural.fromInt(10))
 
-    val _ = naturalAdditionMonoid.combineAll(List.empty[Natural]).shouldBe(Natural.Zero)
+    val _ = naturalAdditionMonoid.combineAll(List.empty[Natural]).shouldBe(Natural.zero)
   }
 }

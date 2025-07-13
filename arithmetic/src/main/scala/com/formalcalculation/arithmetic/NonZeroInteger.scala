@@ -5,120 +5,131 @@ import scala.annotation.tailrec
 import cats.data.NonEmptyList
 
 /** ゼロを含まない整数 */
-sealed trait NonZeroInteger {
+trait NonZeroInteger extends ComparisonOps[NonZeroInteger] with EqualityOps[NonZeroInteger] {
   def isPositive: Boolean
   def isNegative: Boolean
-  def abs: Natural.Positive
+  def abs: Natural
   def sign: Sign
   def toInteger: Integer
+  
+  // 基本演算子オーバーロード
+  inline def +(other: NonZeroInteger): Integer = NonZeroInteger.add(this, other)
+  inline def -(other: NonZeroInteger): Integer = NonZeroInteger.subtract(this, other)
+  inline def *(other: NonZeroInteger): NonZeroInteger = NonZeroInteger.multiply(this, other)
+  inline def /(other: NonZeroInteger): Integer = NonZeroInteger.divide(this, other)
+  inline def %(other: NonZeroInteger): Integer = NonZeroInteger.remainder(this, other)
+  inline def **(exponent: Natural): Integer = NonZeroInteger.power(this, exponent)
+  inline def unary_- : NonZeroInteger = NonZeroInteger.negate(this)
+  
+  // 比較演算子の実装
+  inline def compare(other: NonZeroInteger): Int = NonZeroInteger.compare(this, other)
+  inline def equal(other: NonZeroInteger): Boolean = NonZeroInteger.equal(this, other)
+  
+  // 便利メソッド
+  inline def divideWithRemainder(other: NonZeroInteger): (Integer, Integer) = NonZeroInteger.divideWithRemainder(this, other)
+  inline def show: String = IntegerOps.integerToString(this.toInteger)
 }
 
 object NonZeroInteger {
   
-  /** 正のゼロでない整数 */
-  final case class Positive(value: Natural.Positive) extends NonZeroInteger {
-    val isPositive: Boolean = true
-    val isNegative: Boolean = false
-    val abs: Natural.Positive = value
-    val sign: Sign = Sign.Positive
-    val toInteger: Integer = Integer.Positive(value)
+  inline def positive(value: Natural): NonZeroInteger = impl.NonZeroIntegerPositive(value)
+  inline def negative(value: Natural): NonZeroInteger = impl.NonZeroIntegerNegative(value)
+  
+  // Legacy compatibility
+  object Positive {
+    inline def apply(value: Natural): NonZeroInteger = positive(value)
+    inline def unapply(nzi: NonZeroInteger): Option[Natural] = 
+      if (nzi.isPositive) Some(nzi.abs) else None
   }
   
-  /** 負のゼロでない整数 */
-  final case class Negative(value: Natural.Positive) extends NonZeroInteger {
-    val isPositive: Boolean = false
-    val isNegative: Boolean = true
-    val abs: Natural.Positive = value
-    val sign: Sign = Sign.Negative
-    val toInteger: Integer = Integer.Negative(value)
+  object Negative {
+    inline def apply(value: Natural): NonZeroInteger = negative(value)
+    inline def unapply(nzi: NonZeroInteger): Option[Natural] = 
+      if (nzi.isNegative) Some(nzi.abs) else None
   }
   
   /** 自然数からゼロでない整数を作成 */
-  def fromNatural(n: Natural.Positive): NonZeroInteger = Positive(n)
+  inline def fromNatural(n: Natural): NonZeroInteger = {
+    require(!n.isZero, "Cannot create NonZeroInteger from zero")
+    Positive(n)
+  }
   
   /** 符号と正の自然数からゼロでない整数を作成 */
-  def fromSignAndNatural(sign: Sign, value: Natural.Positive): NonZeroInteger = sign match {
-    case Sign.Positive => Positive(value)
-    case Sign.Negative => Negative(value)
-    case Sign.Zero => throw new IllegalArgumentException("Cannot create NonZeroInteger with zero sign")
+  inline def fromSignAndNatural(sign: Sign, value: Natural): NonZeroInteger = {
+    require(!value.isZero, "Cannot create NonZeroInteger with zero value")
+    sign match {
+      case SignPositive => Positive(value)
+      case SignNegative => Negative(value)
+      case SignZero => throw new IllegalArgumentException("Cannot create NonZeroInteger with zero sign")
+    }
   }
   
   /** Int値からゼロでない整数を作成 */
-  def fromInt(n: Int): Option[NonZeroInteger] = {
+  inline def fromInt(n: Int): Option[NonZeroInteger] = {
     if (n == 0) None
     else if (n > 0) {
-      Natural.fromInt(n) match {
-        case pos: Natural.Positive => Some(Positive(pos))
-        case Natural.Zero => None // これは実際には起こらない
-      }
+      val nat = Natural.fromInt(n)
+      if (nat.isZero) None else Some(Positive(nat))
     } else {
-      Natural.fromInt(-n) match {
-        case pos: Natural.Positive => Some(Negative(pos))
-        case Natural.Zero => None // これは実際には起こらない
-      }
+      val nat = Natural.fromInt(-n)
+      if (nat.isZero) None else Some(Negative(nat))
     }
   }
   
   /** Int値からゼロでない整数を作成（安全でない版） */
-  def fromIntUnsafe(n: Int): NonZeroInteger = {
+  inline def fromIntUnsafe(n: Int): NonZeroInteger = {
     require(n != 0, "Cannot create NonZeroInteger from zero")
     fromInt(n).get
   }
   
   /** 整数からゼロでない整数を作成 */
-  def fromInteger(i: Integer): Option[NonZeroInteger] = i match {
-    case Integer.Zero => None
-    case Integer.Positive(value) => Some(Positive(value.asInstanceOf[Natural.Positive]))
-    case Integer.Negative(value) => Some(Negative(value.asInstanceOf[Natural.Positive]))
-  }
+  inline def fromInteger(i: Integer): Option[NonZeroInteger] = 
+    if (i.isZero) None
+    else if (i.isPositive) Some(Positive(i.abs))
+    else Some(Negative(i.abs))
   
   /** 加算 */
-  def add(a: NonZeroInteger, b: NonZeroInteger): Integer = (a, b) match {
-    case (Positive(av), Positive(bv)) => 
-      Integer.fromNatural(Natural.add(av, bv))
-    case (Negative(av), Negative(bv)) => 
-      Integer.Negative(Natural.add(av, bv))
-    case (Positive(av), Negative(bv)) =>
-      Natural.compare(av, bv) match {
-        case 0 => Integer.Zero
-        case 1 => Integer.fromNatural(Natural.subtractUnsafe(av, bv))
-        case -1 => Integer.Negative(Natural.subtractUnsafe(bv, av))
+  inline def add(a: NonZeroInteger, b: NonZeroInteger): Integer = (a.isPositive, b.isPositive) match {
+    case (true, true) => 
+      Integer.fromNatural(Natural.add(a.abs, b.abs))
+    case (false, false) => 
+      Integer.negative(Natural.add(a.abs, b.abs))
+    case (true, false) =>
+      Natural.compare(a.abs, b.abs) match {
+        case 0 => Integer.zero
+        case 1 => Integer.fromNatural(Natural.subtractUnsafe(a.abs, b.abs))
+        case -1 => Integer.negative(Natural.subtractUnsafe(b.abs, a.abs))
       }
-    case (Negative(av), Positive(bv)) =>
-      Natural.compare(av, bv) match {
-        case 0 => Integer.Zero
-        case 1 => Integer.Negative(Natural.subtractUnsafe(av, bv))
-        case -1 => Integer.fromNatural(Natural.subtractUnsafe(bv, av))
+    case (false, true) =>
+      Natural.compare(a.abs, b.abs) match {
+        case 0 => Integer.zero
+        case 1 => Integer.negative(Natural.subtractUnsafe(a.abs, b.abs))
+        case -1 => Integer.fromNatural(Natural.subtractUnsafe(b.abs, a.abs))
       }
   }
   
   /** 減算 */
-  def subtract(a: NonZeroInteger, b: NonZeroInteger): Integer = add(a, negate(b))
+  inline def subtract(a: NonZeroInteger, b: NonZeroInteger): Integer = add(a, negate(b))
   
   /** 符号反転 */
-  def negate(a: NonZeroInteger): NonZeroInteger = a match {
-    case Positive(v) => Negative(v)
-    case Negative(v) => Positive(v)
-  }
+  inline def negate(a: NonZeroInteger): NonZeroInteger = 
+    if (a.isPositive) Negative(a.abs) else Positive(a.abs)
   
   /** 乗算 */
-  def multiply(a: NonZeroInteger, b: NonZeroInteger): NonZeroInteger = (a, b) match {
-    case (Positive(av), Positive(bv)) => 
-      Positive(Natural.multiply(av, bv).asInstanceOf[Natural.Positive])
-    case (Negative(av), Negative(bv)) => 
-      Positive(Natural.multiply(av, bv).asInstanceOf[Natural.Positive])
-    case (Positive(av), Negative(bv)) => 
-      Negative(Natural.multiply(av, bv).asInstanceOf[Natural.Positive])
-    case (Negative(av), Positive(bv)) => 
-      Negative(Natural.multiply(av, bv).asInstanceOf[Natural.Positive])
+  inline def multiply(a: NonZeroInteger, b: NonZeroInteger): NonZeroInteger = {
+    val resultValue = Natural.multiply(a.abs, b.abs)
+    (a.isPositive, b.isPositive) match {
+      case (true, true) | (false, false) => Positive(resultValue)
+      case _ => Negative(resultValue)
+    }
   }
   
   /** 除算（商と余り） */
   def divideWithRemainder(dividend: NonZeroInteger, divisor: NonZeroInteger): (Integer, Integer) = {
     val (quotNat, remNat) = divideNaturals(dividend.abs, divisor.abs)
     val quotSign = (dividend.sign, divisor.sign) match {
-      case (Sign.Positive, Sign.Positive) | (Sign.Negative, Sign.Negative) => Sign.Positive
-      case _ => Sign.Negative
+      case (SignPositive, SignPositive) | (SignNegative, SignNegative) => Sign.positive
+      case _ => Sign.negative
     }
     val remSign = dividend.sign
     
@@ -128,79 +139,99 @@ object NonZeroInteger {
     )
   }
   
-  /** 自然数の除算（商と余り） */
-  private def divideNaturals(dividend: Natural.Positive, divisor: Natural.Positive): (Natural, Natural) = {
-    val dividendInt = Integer.Positive(dividend)
-    val divisorInt = Integer.Positive(divisor)
-    Integer.divideWithRemainder(dividendInt, divisorInt) match {
-      case Some((quot, rem)) => (Integer.abs(quot), Integer.abs(rem))
-      case None => throw new IllegalArgumentException("Division failed") // これは実際には起こらない
+  /** 自然数の除算（商と余り） - 直接実装してInteger操作を避ける */
+  private def divideNaturals(dividend: Natural, divisor: Natural): (Natural, Natural) = {
+    require(!divisor.isZero, "Division by zero")
+    
+    if (dividend.isZero) {
+      (Natural.zero, Natural.zero)
+    } else if (Natural.compare(dividend, divisor) < 0) {
+      (Natural.zero, dividend)
+    } else {
+      // 長除算アルゴリズムを使用
+      longDivision(dividend, divisor)
     }
   }
   
+  /** 長除算による自然数の除算 - 単純な引き算による実装 */
+  private def longDivision(dividend: Natural, divisor: Natural): (Natural, Natural) = {
+    @tailrec
+    def loop(remainder: Natural, quotient: Natural): (Natural, Natural) = {
+      // remainder < divisor ならば除算完了
+      if (Natural.compare(remainder, divisor) < 0) {
+        (quotient, remainder)
+      } else {
+        // remainder >= divisor なので、divisorを引いて商を1増やす
+        val newRemainder = Natural.subtractUnsafe(remainder, divisor)
+        val newQuotient = Natural.add(quotient, Natural.fromInt(1))
+        loop(newRemainder, newQuotient)
+      }
+    }
+    loop(dividend, Natural.zero)
+  }
+  
   /** 商のみを取得 */
-  def divide(a: NonZeroInteger, b: NonZeroInteger): Integer = 
+  inline def divide(a: NonZeroInteger, b: NonZeroInteger): Integer = 
     divideWithRemainder(a, b)._1
   
   /** 余りのみを取得 */
-  def remainder(a: NonZeroInteger, b: NonZeroInteger): Integer = 
+  inline def remainder(a: NonZeroInteger, b: NonZeroInteger): Integer = 
     divideWithRemainder(a, b)._2
   
   /** べき乗（指数は自然数） */
-  def power(base: NonZeroInteger, exponent: Natural): Integer = exponent match {
-    case Natural.Zero => Integer.fromInt(1)
-    case Natural.Positive(bits) if bits.toList == List(true) => base.toInteger // exponent == 1
-    case _ => 
-      // 二進法によるべき乗
-      binaryPower(base, exponent)
-  }
+  inline def power(base: NonZeroInteger, exponent: Natural): Integer = 
+    if (exponent.isZero) Integer.fromInt(1)
+    else if (exponent.isOne) base.toInteger
+    else binaryPower(base, exponent)
   
   /** 二進法によるべき乗計算 */
   private def binaryPower(base: NonZeroInteger, exponent: Natural): Integer = {
     @tailrec
-    def loop(currentBase: Integer, exp: Natural, acc: Integer): Integer = exp match {
-      case Natural.Zero => acc
-      case Natural.Positive(bits) =>
-        val newAcc = if (bits.head) Integer.multiply(acc, currentBase) else acc
+    def loop(currentBase: Integer, exp: Natural, acc: Integer): Integer = 
+      if (exp.isZero) acc
+      else {
+        val bits = com.formalcalculation.arithmetic.impl.NaturalOpsImpl.getBits(exp)
+        val newAcc = if (bits.nonEmpty && bits.head) Integer.multiply(acc, currentBase) else acc
         val newBase = Integer.multiply(currentBase, currentBase)
         val newExp = shiftRight(exp)
         loop(newBase, newExp, newAcc)
-    }
+      }
     loop(base.toInteger, exponent, Integer.fromInt(1))
   }
   
   /** 自然数を1ビット右シフト */
-  private def shiftRight(n: Natural): Natural = n match {
-    case Natural.Zero => Natural.Zero
-    case Natural.Positive(bits) =>
-      val bitsList = bits.toList
+  private def shiftRight(n: Natural): Natural = {
+    if (n.isZero) Natural.zero
+    else {
+      val bitsList = com.formalcalculation.arithmetic.impl.NaturalOpsImpl.getBits(n)
       bitsList match {
-        case List(_) => Natural.Zero
+        case List(_) => Natural.zero
         case _ :: tailBits =>
-          if (tailBits.isEmpty) Natural.Zero
+          if (tailBits.isEmpty) Natural.zero
           else {
             val trimmed = tailBits.reverse.dropWhile(!_).reverse
-            if (trimmed.isEmpty) Natural.Zero
+            if (trimmed.isEmpty) Natural.zero
             else NonEmptyList.fromList(trimmed) match {
-              case Some(nel) => Natural.Positive(nel)
-              case None => Natural.Zero
+              case Some(nel) => Natural.positiveFromBits(nel)
+              case None => Natural.zero
             }
           }
-        case Nil => assert(false, "NonEmptyList cannot be empty"); Natural.Zero
+        case Nil => Natural.zero
       }
+    }
   }
   
   /** 比較（-1: a < b, 0: a == b, 1: a > b） */
-  def compare(a: NonZeroInteger, b: NonZeroInteger): Int = (a, b) match {
-    case (Positive(av), Positive(bv)) => Natural.compare(av, bv)
-    case (Negative(av), Negative(bv)) => Natural.compare(bv, av)
-    case (Positive(_), Negative(_)) => 1
-    case (Negative(_), Positive(_)) => -1
+  inline def compare(a: NonZeroInteger, b: NonZeroInteger): Int = (a.isPositive, b.isPositive) match {
+    case (true, true) => Natural.compare(a.abs, b.abs)
+    case (false, false) => Natural.compare(b.abs, a.abs)
+    case (true, false) => 1
+    case (false, true) => -1
   }
   
   /** 等価性 */
-  def equal(a: NonZeroInteger, b: NonZeroInteger): Boolean = compare(a, b) == 0
+  inline def equal(a: NonZeroInteger, b: NonZeroInteger): Boolean = compare(a, b) == 0
   
   /** 絶対値 */
-  def abs(a: NonZeroInteger): Natural.Positive = a.abs
+  inline def abs(a: NonZeroInteger): Natural = a.abs
 }

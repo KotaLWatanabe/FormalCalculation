@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 class NumberTheorySpec extends AnyFlatSpec with Matchers {
 
   "GCD" should "work correctly for natural numbers" in {
-    val zero     = Natural.Zero
+    val zero     = Natural.zero
     val one      = Natural.fromInt(1)
     val two      = Natural.fromInt(2)
     val three    = Natural.fromInt(3)
@@ -29,7 +29,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "LCM" should "work correctly for natural numbers" in {
-    val zero    = Natural.Zero
+    val zero    = Natural.zero
     val one     = Natural.fromInt(1)
     val two     = Natural.fromInt(2)
     val three   = Natural.fromInt(3)
@@ -49,7 +49,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "Even/Odd detection" should "work correctly" in {
-    val zero  = Natural.Zero
+    val zero  = Natural.zero
     val one   = Natural.fromInt(1)
     val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
@@ -72,7 +72,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "Divisibility" should "work correctly" in {
-    val zero   = Natural.Zero
+    val zero   = Natural.zero
     val one    = Natural.fromInt(1)
     val two    = Natural.fromInt(2)
     val three  = Natural.fromInt(3)
@@ -98,7 +98,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "Prime detection" should "work correctly for small numbers" in {
-    val zero     = Natural.Zero
+    val zero     = Natural.zero
     val one      = Natural.fromInt(1)
     val two      = Natural.fromInt(2)
     val three    = Natural.fromInt(3)
@@ -130,7 +130,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "Factorial" should "work correctly" in {
-    val zero  = Natural.Zero
+    val zero  = Natural.zero
     val one   = Natural.fromInt(1)
     val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
@@ -146,7 +146,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "Fibonacci" should "work correctly" in {
-    val zero  = Natural.Zero
+    val zero  = Natural.zero
     val one   = Natural.fromInt(1)
     val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)
@@ -168,7 +168,7 @@ class NumberTheorySpec extends AnyFlatSpec with Matchers {
   }
 
   "Binomial coefficient" should "work correctly" in {
-    val zero  = Natural.Zero
+    val zero  = Natural.zero
     val one   = Natural.fromInt(1)
     val two   = Natural.fromInt(2)
     val three = Natural.fromInt(3)

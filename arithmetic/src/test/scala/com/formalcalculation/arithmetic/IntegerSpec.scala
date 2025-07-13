@@ -8,15 +8,15 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyChecks {
 
   "Integer.fromInt" should "create correct integers" in {
-    val _ = Integer.fromInt(0).shouldBe(Integer.Zero)
-    val _ = Integer.fromInt(1).shouldBe(Integer.Positive(Natural.fromInt(1)))
-    val _ = Integer.fromInt(-1).shouldBe(Integer.Negative(Natural.fromInt(1)))
-    val _ = Integer.fromInt(5).shouldBe(Integer.Positive(Natural.fromInt(5)))
-    val _ = Integer.fromInt(-5).shouldBe(Integer.Negative(Natural.fromInt(5)))
+    val _ = Integer.fromInt(0).shouldBe(Integer.zero)
+    val _ = Integer.fromInt(1).shouldBe(Integer.positive(Natural.fromInt(1)))
+    val _ = Integer.fromInt(-1).shouldBe(Integer.negative(Natural.fromInt(1)))
+    val _ = Integer.fromInt(5).shouldBe(Integer.positive(Natural.fromInt(5)))
+    val _ = Integer.fromInt(-5).shouldBe(Integer.negative(Natural.fromInt(5)))
   }
 
   "Integer addition" should "work correctly" in {
-    val zero     = Integer.Zero
+    val zero     = Integer.zero
     val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
     val two      = Integer.fromInt(2)
@@ -35,7 +35,7 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer subtraction" should "work correctly" in {
-    val zero     = Integer.Zero
+    val zero     = Integer.zero
     val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
     val two      = Integer.fromInt(2)
@@ -51,7 +51,7 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer multiplication" should "work correctly" in {
-    val zero     = Integer.Zero
+    val zero     = Integer.zero
     val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
     val two      = Integer.fromInt(2)
@@ -72,7 +72,7 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer division" should "work correctly" in {
-    val zero       = Integer.Zero
+    val zero       = Integer.zero
     val one        = Integer.fromInt(1)
     val minusOne   = Integer.fromInt(-1)
     val two        = Integer.fromInt(2)
@@ -92,7 +92,7 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer remainder" should "work correctly" in {
-    val zero       = Integer.Zero
+    val zero       = Integer.zero
     val one        = Integer.fromInt(1)
     val three      = Integer.fromInt(3)
     val seven      = Integer.fromInt(7)
@@ -109,12 +109,12 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer power" should "work correctly" in {
-    val zero     = Integer.Zero
+    val zero     = Integer.zero
     val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
     val two      = Integer.fromInt(2)
 
-    val natZero  = Natural.Zero
+    val natZero  = Natural.zero
     val natOne   = Natural.fromInt(1)
     val natTwo   = Natural.fromInt(2)
     val natThree = Natural.fromInt(3)
@@ -132,7 +132,7 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer comparison" should "work correctly" in {
-    val zero     = Integer.Zero
+    val zero     = Integer.zero
     val one      = Integer.fromInt(1)
     val minusOne = Integer.fromInt(-1)
     val two      = Integer.fromInt(2)
@@ -159,7 +159,7 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
   }
 
   "Integer negate" should "work correctly" in {
-    val zero      = Integer.Zero
+    val zero      = Integer.zero
     val one       = Integer.fromInt(1)
     val minusOne  = Integer.fromInt(-1)
     val five      = Integer.fromInt(5)
@@ -221,16 +221,16 @@ class IntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyCheck
         .shouldBe(true)
 
       // 加法の単位元
-      val _ = Integer.equal(Integer.add(intA, Integer.Zero), intA).shouldBe(true)
+      val _ = Integer.equal(Integer.add(intA, Integer.zero), intA).shouldBe(true)
 
       // 乗法の単位元
       val _ = Integer.equal(Integer.multiply(intA, Integer.fromInt(1)), intA).shouldBe(true)
 
       // 乗法の零元
-      val _ = Integer.equal(Integer.multiply(intA, Integer.Zero), Integer.Zero).shouldBe(true)
+      val _ = Integer.equal(Integer.multiply(intA, Integer.zero), Integer.zero).shouldBe(true)
 
       // 加法の逆元
-      val _ = Integer.equal(Integer.add(intA, Integer.negate(intA)), Integer.Zero).shouldBe(true)
+      val _ = Integer.equal(Integer.add(intA, Integer.negate(intA)), Integer.zero).shouldBe(true)
 
       // 二重否定
       val _ = Integer.equal(Integer.negate(Integer.negate(intA)), intA).shouldBe(true)

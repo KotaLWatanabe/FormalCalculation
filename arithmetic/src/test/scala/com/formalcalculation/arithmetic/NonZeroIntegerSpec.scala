@@ -8,14 +8,14 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckPropertyChecks {
 
   "NonZeroInteger.fromInt" should "create correct non-zero integers" in {
-    val _ = NonZeroInteger.fromInt(1).shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(1).asInstanceOf[Natural.Positive])))
+    val _ = NonZeroInteger.fromInt(1).shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(1))))
     val _ = NonZeroInteger
       .fromInt(-1)
-      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(1).asInstanceOf[Natural.Positive])))
-    val _ = NonZeroInteger.fromInt(5).shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(1))))
+    val _ = NonZeroInteger.fromInt(5).shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(5))))
     val _ = NonZeroInteger
       .fromInt(-5)
-      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(5))))
   }
 
   it should "return None for zero" in {
@@ -23,10 +23,10 @@ class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckProper
   }
 
   "NonZeroInteger.fromIntUnsafe" should "create correct non-zero integers" in {
-    val _ = NonZeroInteger.fromIntUnsafe(1).shouldBe(NonZeroInteger.Positive(Natural.fromInt(1).asInstanceOf[Natural.Positive]))
+    val _ = NonZeroInteger.fromIntUnsafe(1).shouldBe(NonZeroInteger.Positive(Natural.fromInt(1)))
     val _ = NonZeroInteger
       .fromIntUnsafe(-1)
-      .shouldBe(NonZeroInteger.Negative(Natural.fromInt(1).asInstanceOf[Natural.Positive]))
+      .shouldBe(NonZeroInteger.Negative(Natural.fromInt(1)))
   }
 
   it should "throw exception for zero" in {
@@ -36,14 +36,14 @@ class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckProper
   "NonZeroInteger.fromInteger" should "convert from Integer correctly" in {
     val pos  = Integer.fromInt(5)
     val neg  = Integer.fromInt(-5)
-    val zero = Integer.Zero
+    val zero = Integer.zero
 
     val _ = NonZeroInteger
       .fromInteger(pos)
-      .shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+      .shouldBe(Some(NonZeroInteger.Positive(Natural.fromInt(5))))
     val _ = NonZeroInteger
       .fromInteger(neg)
-      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(5).asInstanceOf[Natural.Positive])))
+      .shouldBe(Some(NonZeroInteger.Negative(Natural.fromInt(5))))
     val _ = NonZeroInteger.fromInteger(zero).shouldBe(None)
   }
 
@@ -55,7 +55,7 @@ class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckProper
 
     val _ = NonZeroInteger.add(pos1, pos2).shouldBe(Integer.fromInt(8))
     val _ = NonZeroInteger.add(neg1, neg2).shouldBe(Integer.fromInt(-8))
-    val _ = NonZeroInteger.add(pos1, neg1).shouldBe(Integer.Zero)
+    val _ = NonZeroInteger.add(pos1, neg1).shouldBe(Integer.zero)
     val _ = NonZeroInteger.add(pos2, neg1).shouldBe(Integer.fromInt(2))
     val _ = NonZeroInteger.add(pos1, neg2).shouldBe(Integer.fromInt(-2))
   }
@@ -132,7 +132,7 @@ class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckProper
     val base    = NonZeroInteger.fromIntUnsafe(2)
     val negBase = NonZeroInteger.fromIntUnsafe(-2)
 
-    val _ = NonZeroInteger.power(base, Natural.Zero).shouldBe(Integer.fromInt(1))
+    val _ = NonZeroInteger.power(base, Natural.zero).shouldBe(Integer.fromInt(1))
     val _ = NonZeroInteger.power(base, Natural.fromInt(1)).shouldBe(Integer.fromInt(2))
     val _ = NonZeroInteger.power(base, Natural.fromInt(3)).shouldBe(Integer.fromInt(8))
     val _ = NonZeroInteger.power(negBase, Natural.fromInt(2)).shouldBe(Integer.fromInt(4))
@@ -156,11 +156,11 @@ class NonZeroIntegerSpec extends AnyFlatSpec with Matchers with ScalaCheckProper
 
       // 乗算は常にゼロでない
       val product = NonZeroInteger.multiply(nzA, nzB)
-      product.toInteger should not be Integer.Zero
+      val _ = product.toInteger should not be Integer.zero
 
       // 絶対値は常に正
-      val _ = nzA.abs.isZero.shouldBe(false)
-      val _ = nzB.abs.isZero.shouldBe(false)
+      val _ = NonZeroInteger.abs(nzA).isZero.shouldBe(false)
+      NonZeroInteger.abs(nzB).isZero.shouldBe(false)
     }
   }
 }

@@ -2,201 +2,128 @@
 package com.formalcalculation.arithmetic
 
 import com.formalcalculation.algebra.{Monoid, Semigroup}
-
-import scala.annotation.tailrec
 import cats.data.NonEmptyList
 
-/**
- * 自然数（0以上の整数）を二進表現で実装 List[Boolean]を使用してビットを表現（先頭が最下位ビット）
- */
-sealed trait Natural {
-  def toBits: List[Boolean]
+trait Repr[N <: Natural] {
+  type ReprType
+  def repr: N => ReprType
+  def from: ReprType => N
+}
+
+sealed trait Natural extends ComparisonOps[Natural] with EqualityOps[Natural] {
   def isZero: Boolean
   def isOne: Boolean
+
+  def repr(using r: Repr[this.type]): r.ReprType = r.repr(this)
+
+  // 演算子オーバーロード
+  inline def +(other: Natural): Natural         = Natural.add(this, other)
+  inline def *(other: Natural): Natural         = Natural.multiply(this, other)
+  inline def -(other: Natural): Option[Natural] = Natural.subtract(this, other)
+
+  // 比較演算子の実装
+  inline def compare(other: Natural): Int   = Natural.compare(this, other)
+  inline def equal(other: Natural): Boolean = Natural.equal(this, other)
+
+  // 後続者（次の自然数）
+  inline def succ: Natural = Natural.add(this, Natural.fromInt(1))
+
+  // 文字列表現
+  inline def show: String = Natural.naturalToString(this)
+
+  inline def isEven: Boolean = Natural.isEven(this)
+  inline def isOdd: Boolean  = !isEven
+}
+case object NaturalZero extends Natural {
+  def isZero: Boolean = true
+  def isOne: Boolean  = false
+}
+sealed trait NaturalPositive extends Natural {
+  def isZero: Boolean = false
+}
+
+// Implementation class for positive natural numbers
+final case class INaturalPositive(bits: cats.data.NonEmptyList[Boolean]) extends NaturalPositive {
+  require(bits.last, "Most significant bit must be true")
+
+  // The Repr type class will handle bit representation access
+
+  inline def isOne: Boolean = bits.toList == List(true)
+
+  /** 正規化：末尾の不要なfalseビットを除去 */
+  def normalized: Natural =
+    bits.toList.reverse.dropWhile(!_).reverse match {
+      case Nil     => NaturalZero
+      case x :: xs => INaturalPositive(cats.data.NonEmptyList(x, xs))
+    }
+}
+
+trait NaturalOps {
+  def add(a: Natural, b: Natural): Natural
+  def multiply(a: Natural, b: Natural): Natural
+  def subtract(a: Natural, b: Natural): Option[Natural]
+  def subtractUnsafe(a: Natural, b: Natural): Natural
+  def compare(a: Natural, b: Natural): Int
+  def equal(a: Natural, b: Natural): Boolean
+  def fromInt(n: Int): Natural
+  def naturalToString(n: Natural): String
+  def naturalToInt(n: Natural): Int
+  def isEven(n: Natural): Boolean
+  def isOdd(n: Natural): Boolean = !isEven(n)
 }
 
 object Natural {
 
-  /** ゼロを表す自然数 */
-  case object Zero extends Natural {
-    val toBits: List[Boolean] = Nil
-    val isZero: Boolean       = true
-    val isOne: Boolean        = false
-  }
+  // Factory methods for creating instances
+  inline def zero: Natural = NaturalZero
+  inline def positiveFromBits(bits: cats.data.NonEmptyList[Boolean]): Natural = INaturalPositive(bits)
+  
+  // Repr access methods
+  inline def toRepr(n: Natural)(using r: Repr[Natural]): r.ReprType = r.repr(n)
+  inline def fromRepr[R](repr: R)(using r: Repr[Natural] { type ReprType = R }): Natural = r.from(repr)
 
-  /** 正の自然数を表現（ビットリスト、先頭が最下位ビット） */
-  final case class Positive(bits: NonEmptyList[Boolean]) extends Natural {
-    require(bits.last, "Most significant bit must be true")
 
-    val toBits: List[Boolean] = bits.toList
-    val isZero: Boolean       = false
-    val isOne: Boolean        = bits.toList == List(true)
 
-    /** 正規化：末尾の不要なfalseビットを除去 */
-    def normalized: Natural =
-      bits.toList.reverse.dropWhile(!_).reverse match {
-        case Nil     => Zero
-        case x :: xs => Positive(NonEmptyList(x, xs))
-      }
-  }
+  // Default implementation
+  private val defaultOps: NaturalOps = impl.NaturalOpsImpl
 
   /** 整数値から自然数を作成 */
-  def fromInt(n: Int): Natural = {
-    require(n >= 0, "Natural number must be non-negative")
-    if (n == 0) Zero
-    else
-      toBinaryList(n) match {
-        case Nil     => Zero
-        case x :: xs => Positive(NonEmptyList(x, xs))
-      }
-  }
-
-  /** 整数を二進リストに変換（先頭が最下位ビット） */
-  private def toBinaryList(n: Int): List[Boolean] = {
-    @tailrec
-    def loop(value: Int, acc: List[Boolean]): List[Boolean] = {
-      if (value == 0) acc
-      else loop(value / 2, (value % 2 == 1) :: acc)
-    }
-    loop(n, Nil).reverse
-  }
+  inline def fromInt(n: Int): Natural = defaultOps.fromInt(n)
 
   /** 加算 */
-  def add(a: Natural, b: Natural): Natural = (a, b) match {
-    case (Zero, x) => x
-    case (x, Zero) => x
-    case (Positive(aBits), Positive(bBits)) =>
-      addBits(aBits.toList, bBits.toList) match {
-        case Nil     => Zero
-        case x :: xs => Positive(NonEmptyList(x, xs))
-      }
-  }
-
-  /** ビットリストの加算（キャリー付き） */
-  private def addBits(a: List[Boolean], b: List[Boolean]): List[Boolean] = {
-    @tailrec
-    def loop(a: List[Boolean], b: List[Boolean], carry: Boolean, acc: List[Boolean]): List[Boolean] = {
-      (a, b) match {
-        case (Nil, Nil) => if (carry) (acc :+ true) else acc
-        case (Nil, bb)  => loop(List(false), bb, carry, acc)
-        case (aa, Nil)  => loop(aa, List(false), carry, acc)
-        case (aHead :: aTail, bHead :: bTail) =>
-          val sum       = (if (aHead) 1 else 0) + (if (bHead) 1 else 0) + (if (carry) 1 else 0)
-          val resultBit = sum % 2 == 1
-          val newCarry  = sum >= 2
-          loop(aTail, bTail, newCarry, acc :+ resultBit)
-      }
-    }
-
-    loop(a, b, false, Nil)
-  }
+  inline def add(a: Natural, b: Natural): Natural = defaultOps.add(a, b)
 
   /** 乗算 */
-  def multiply(a: Natural, b: Natural): Natural = (a, b) match {
-    case (Zero, _) | (_, Zero)                            => Zero
-    case (x, Positive(bits)) if bits.toList == List(true) => x // b == 1
-    case (Positive(bits), x) if bits.toList == List(true) => x // a == 1
-    case (Positive(aBits), Positive(bBits)) =>
-      multiplyBits(aBits.toList, bBits.toList)
-  }
-
-  /** ビットリストの乗算 */
-  private def multiplyBits(a: List[Boolean], b: List[Boolean]): Natural = {
-    @tailrec
-    def loop(multiplicand: List[Boolean], multiplier: List[Boolean], position: Int, acc: Natural): Natural =
-      multiplier match {
-        case Nil => acc
-        case false :: rest =>
-          loop(multiplicand, rest, position + 1, acc)
-        case true :: rest =>
-          val newAcc = add(
-            acc,
-            shiftLeft(multiplicand, position) match {
-              case Nil     => Zero
-              case x :: xs => Positive(NonEmptyList(x, xs))
-            }
-          )
-          loop(multiplicand, rest, position + 1, newAcc)
-      }
-
-    loop(a, b, 0, Zero)
-  }
-
-  /** ビットリストを左にnビットシフト */
-  private def shiftLeft(bits: List[Boolean], n: Int): List[Boolean] = {
-    if (n <= 0) bits
-    else List.fill(n)(false) ++ bits
-  }
+  inline def multiply(a: Natural, b: Natural): Natural = defaultOps.multiply(a, b)
 
   /** 比較（-1: a < b, 0: a == b, 1: a > b） */
-  def compare(a: Natural, b: Natural): Int = (a, b) match {
-    case (Zero, Zero) => 0
-    case (Zero, _)    => -1
-    case (_, Zero)    => 1
-    case (Positive(aBits), Positive(bBits)) =>
-      val aList = aBits.toList
-      val bList = bBits.toList
-      if (aList.length != bList.length) aList.length.compare(bList.length)
-      else compareBits(aList.reverse, bList.reverse) // 最上位ビットから比較
-  }
-
-  /** ビットリストの比較（最上位から） */
-  @tailrec
-  private def compareBits(a: List[Boolean], b: List[Boolean]): Int = (a, b) match {
-    case (Nil, Nil)               => 0
-    case (true :: _, false :: _)  => 1
-    case (false :: _, true :: _)  => -1
-    case (_ :: aTail, _ :: bTail) => compareBits(aTail, bTail)
-    case _                        => assert(false, "同じ長さなのでここには来ない"); 0
-  }
+  inline def compare(a: Natural, b: Natural): Int = defaultOps.compare(a, b)
 
   /** 減算（a >= b の場合のみ定義） */
-  def subtract(a: Natural, b: Natural): Option[Natural] = {
-    if (compare(a, b) < 0) None
-    else Some(subtractUnsafe(a, b))
-  }
+  inline def subtract(a: Natural, b: Natural): Option[Natural] = defaultOps.subtract(a, b)
 
   /** 減算（結果が負になる場合は未定義） */
-  def subtractUnsafe(a: Natural, b: Natural): Natural = (a, b) match {
-    case (x, Zero) => x
-    case (Positive(aBits), Positive(bBits)) =>
-      val result = subtractBits(aBits.toList, bBits.toList)
-      result.reverse.dropWhile(!_).reverse match {
-        case Nil     => Zero
-        case x :: xs => Positive(NonEmptyList(x, xs))
-      }
-    case (Zero, _) => assert(false, "実際には呼ばれない"); Zero
-  }
-
-  /** ビットリストの減算（ボロー付き） */
-  private def subtractBits(a: List[Boolean], b: List[Boolean]): List[Boolean] = {
-    @tailrec
-    def loop(a: List[Boolean], b: List[Boolean], borrow: Boolean, acc: List[Boolean]): List[Boolean] = {
-      (a, b) match {
-        case (Nil, Nil) => if (borrow) (acc :+ true) else acc
-        case (aa, Nil)  => loop(aa, List(false), borrow, acc)
-        case (Nil, _)   => assert(false, "実際には呼ばれない"); acc // a >= b が保証されているため
-        case (aHead :: aTail, bHead :: bTail) =>
-          val aVal                   = if (aHead) 1 else 0
-          val bVal                   = if (bHead) 1 else 0
-          val borrowVal              = if (borrow) 1 else 0
-          val diff                   = aVal - bVal - borrowVal
-          val (resultBit, newBorrow) = if (diff >= 0) (diff == 1, false) else (true, true)
-          loop(aTail, bTail, newBorrow, acc :+ resultBit)
-      }
-    }
-
-    loop(a, b, false, Nil)
-  }
+  inline def subtractUnsafe(a: Natural, b: Natural): Natural = defaultOps.subtractUnsafe(a, b)
 
   /** 等価性 */
-  def equal(a: Natural, b: Natural): Boolean = compare(a, b) == 0
+  inline def equal(a: Natural, b: Natural): Boolean = defaultOps.equal(a, b)
+
+  /** 後続者（次の自然数） */
+  inline def succ(n: Natural): Natural = add(n, fromInt(1))
+
+  /** 偶数判定 */
+  inline def isEven(n: Natural): Boolean = defaultOps.isEven(n)
+
+  /** 自然数を文字列に変換 */
+  inline def naturalToString(n: Natural): String = defaultOps.naturalToString(n)
+
+  /** 自然数をIntに変換 */
+  inline def naturalToInt(n: Natural): Int = defaultOps.naturalToInt(n)
 
   // Monoid instances
-
   /** Addition monoid for Natural numbers */
   given naturalAdditionSemigroup: Semigroup[Natural] = (x: Natural, y: Natural) => add(x, y)
-  given naturalAdditionMonoid: Monoid[Natural]       = Monoid.instance(Zero, add)
+  given naturalAdditionMonoid: Monoid[Natural]       = Monoid.instance(zero, add)
 
   /** Multiplication monoid for Natural numbers */
   given naturalMultiplicationMonoid: Monoid[Natural] = Monoid.instance(fromInt(1), multiply)
